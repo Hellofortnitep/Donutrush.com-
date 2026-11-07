@@ -44,8 +44,44 @@ const ttok=id=>crypto.createHmac('sha256',secret).update('tx:'+id).digest('base6
 const tlink=(tx,a)=>`${BASE}/admin/tx/${tx.id}?t=${ttok(tx.id)}${a?'&a='+a:''}`;
 const page=h=>`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><body style="font-family:system-ui;background:#0b0b0d;color:#eee;max-width:520px;margin:40px auto;padding:0 16px;line-height:1.5">${h}</body>`;
 const btn=(v,l,c,hot)=>`<button name="a" value="${v}" style="font-size:18px;padding:14px 22px;margin:6px 6px 6px 0;border:0;border-radius:10px;background:${c};color:#fff;${hot?'outline:3px solid #fff;':'opacity:.8;'}cursor:pointer">${l}</button>`;
-async function mail(subject,html,links){console.log('\n[MAIL to '+OWNER_EMAIL+'] '+subject+'\n'+links.join('\n')+'\n');if(!process.env.RESEND_API_KEY)return;
- try{await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:'Bearer '+process.env.RESEND_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:process.env.MAIL_FROM||'DonutSMP Casino <onboarding@resend.dev>',to:[OWNER_EMAIL],subject,html})})}catch(e){console.log('mail failed:',e.message)}}
+async function mail(subject,html,links){
+  const webhook=process.env.DISCORD_WEBHOOK_URL;
+  console.log('[NOTIFICATION] '+subject);
+
+  if(!webhook){
+    console.log('Discord webhook is not configured');
+    return;
+  }
+
+  const message=[
+    '**🍩 DONUTRUSH NOTIFICATION**',
+    '**'+subject+'**',
+    '',
+    'A player has submitted a request.',
+    '',
+    ...links
+  ].join('\n');
+
+  try{
+    const response=await fetch(webhook,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        content:message.slice(0,1900),
+        allowed_mentions:{parse:[]}
+      })
+    });
+
+    if(!response.ok){
+      console.log('Discord notification failed:',response.status,
+        await response.text());
+    }else{
+      console.log('Discord notification sent!');
+    }
+  }catch(error){
+    console.log('Discord notification error:',error.message);
+  }
+}
 function notify(tx){const dep=tx.type=='deposit',y=tlink(tx,'yes'),n=tlink(tx,'no');
  const html=dep?`<p><b>${esc(tx.email)}</b> (DonutSMP name: <b>${esc(tx.ign)}</b>) says they paid <b>${fmt(tx.amt)}</b> to <b>${esc(PAY_TO)}</b>.</p><p>Did you get the money?</p><p><a href="${y}">✅ YES, I got it</a> &nbsp; <a href="${n}">❌ NO, I did not</a></p>`
  :`<p><b>${esc(tx.email)}</b> wants to withdraw <b>${fmt(tx.amt)}</b>.</p><p>In DonutSMP run: <code>/pay ${esc(tx.ign)} ${tx.amt}</code></p><p><a href="${y}">✅ I PAID them</a> &nbsp; <a href="${n}">❌ Reject and refund</a></p>`;
