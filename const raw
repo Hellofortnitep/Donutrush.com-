@@ -90,14 +90,82 @@ function resolveTx(tx,a){if(tx.status!=='pending')return;const u=db.users[tx.ema
  if(tx.type=='deposit'){if(a=='yes'&&u){u.bal+=tx.amt;u.dep=(u.dep||0)+tx.amt;tx.status='approved'}else tx.status='rejected'}
  else{if(a=='yes')tx.status='paid';else{if(u)u.bal+=tx.amt;tx.status='rejected'}}tx.done=Date.now();save()}
 const raw=req=>new Promise(ok=>{let d='';req.on('data',c=>{if(d.length<2e3)d+=c});req.on('end',()=>ok(d))});
-async function admin(req,res,url){const q=new URL(req.url,'http://x').searchParams;
- if(url==='/admin'){if(q.get('token')!==ADMIN)return res.writeHead(403).end('Forbidden');const P=Object.values(db.txs).filter(t=>t.status=='pending');
-  res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(page('<h2>Pending requests</h2>'+(P.map(t=>`<p>${t.type=='deposit'?'💰 Deposit':'🏧 Withdraw'} ${fmt(t.amt)} · ${esc(t.email)} · ${esc(t.ign)} · <a style="color:#ffc93c" href="${tlink(t)}">open</a></p>`).join('')||'<p>None 🎉</p>')))}
- const m=/^\/admin\/tx\/([a-f0-9]{16})$/.exec(url),tx=m&&db.txs[m[1]];if(!tx||q.get('t')!==ttok(tx.id))return res.writeHead(403).end('Invalid or expired link');
- if(req.method==='POST'){const a=new URLSearchParams(await raw(req)).get('a');if(a!=='yes'&&a!=='no')return res.writeHead(400).end('Bad request');resolveTx(tx,a);}
- const dep=tx.type=='deposit',pre=q.get('a');res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','X-Frame-Options':'DENY'});
+async function admin(req,res,url){
+ const q=new URL(req.url,'http://x').searchParams;
+ const token=q.get('token');
+ const adminUrl='/admin?token='+encodeURIComponent(ADMIN);
+
+ if(url==='/admin'){
+  if(token!==ADMIN)return res.writeHead(403).end('Forbidden');
+
+  const P=Object.values(db.txs).filter(t=>t.status==='pending');
+  const users=Object.entries(db.users);
+
+  res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});
+
+  return res.end(page(`
+   <h2>🍩 DonutRush Owner Dashboard</h2>
+
+   <h3>Reset a player's balance</h3>
+   <form method="POST" action="/admin/reset?token=${encodeURIComponent(ADMIN)}">
+    <input name="email" type="email" required placeholder="Player email">
+    <button style="padding:10px;background:#dc2626;color:white">Reset to 0</button>
+   </form>
+
+   <h3>Set a player's balance</h3>
+   <form method="POST" action="/admin/setbalance?token=${encodeURIComponent(ADMIN)}">
+    <input name="email" type="email" required placeholder="Player email">
+    <input name="amount" type="number" min="0" step="any" required placeholder="New balance">
+    <button style="padding:10px">Set balance</button>
+   </form>
+
+   <h3>Registered players (${users.length})</h3>
+   ${users.map(([email,u])=>`<p>${esc(email)} — ${fmt(u.bal)}</p>`).join('')||'<p>No players yet</p>'}
+
+   <hr>
+   <h3>Pending requests</h3>
+   ${P.map(t=>`<p>${t.type==='deposit'?'💰 Deposit':'🏧 Withdraw'} ${fmt(t.amt)} · ${esc(t.email)} · ${esc(t.ign)} · <a style="color:#ffc93c" href="${tlink(t)}">open</a></p>`).join('')||'<p>None 🎉</p>'}
+  `));
+ }
+
+ if(url==='/admin/reset'||url==='/admin/setbalance'){
+  if(token!==ADMIN)return res.writeHead(403).end('Forbidden');
+  if(req.method!=='POST')return res.writeHead(405).end('Method not allowed');
+
+  const data=new URLSearchParams(await raw(req));
+  const email=String(data.get('email')||'').trim().toLowerCase();
+  const u=db.users[email];
+
+  if(!u)return res.writeHead(404).end('Player not found');
+
+  if(url==='/admin/reset'){
+   u.bal=0;
+  }else{
+   const amount=Number(data.get('amount'));
+   if(!Number.isFinite(amount)||amount<0)return res.writeHead(400).end('Invalid balance');
+   u.bal=amount;
+  }
+
+  save();
+  res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});
+  return res.end(page(`<h2>✅ Balance updated!</h2><p>${esc(email)}</p><p>New balance: ${fmt(u.bal)}</p><a href="${adminUrl}">Back to dashboard</a>`));
+ }
+
+ const m=/^\/admin\/tx\/([a-f0-9]{16})$/.exec(url),tx=m&&db.txs[m[1]];
+ if(!tx||q.get('t')!==ttok(tx.id))return res.writeHead(403).end('Invalid or expired link');
+
+ if(req.method==='POST'){
+  const a=new URLSearchParams(await raw(req)).get('a');
+  if(a!=='yes'&&a!=='no')return res.writeHead(400).end('Bad request');
+  resolveTx(tx,a);
+ }
+
+ const dep=tx.type==='deposit',pre=q.get('a');
+ res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','X-Frame-Options':'DENY'});
+
  return res.end(page(`<h2>${dep?'💰 Deposit':'🏧 Withdrawal'}: ${fmt(tx.amt)}</h2><p>${esc(tx.email)}<br>DonutSMP name: <b>${esc(tx.ign)}</b></p>`+(tx.status!=='pending'?`<p style="font-size:20px">Status: <b>${tx.status.toUpperCase()}</b></p>`:
-  `<p>${dep?`Did <b>${esc(tx.ign)}</b> pay <b>${fmt(tx.amt)}</b> to <b>${esc(PAY_TO)}</b>?`:`Run <code>/pay ${esc(tx.ign)} ${tx.amt}</code> in DonutSMP, then confirm.`}</p><form method="POST">${btn('yes',dep?'✅ Yes, I got it':'✅ I paid them','#16a34a',pre!=='no')}${btn('no',dep?'❌ No':'❌ Reject (refund)','#dc2626',pre==='no')}</form>`)))}
+  `<p>${dep?`Did <b>${esc(tx.ign)}</b> pay <b>${fmt(tx.amt)}</b> to <b>${esc(PAY_TO)}</b>?`:`Run <code>/pay ${esc(tx.ign)} ${tx.amt}</code> in DonutSMP, then confirm.`}</p><form method="POST">${btn('yes',dep?'✅ Yes, I got it':'✅ I paid them','#16a34a',pre!=='no')}${btn('no',dep?'❌ No':'❌ Reject (refund)','#dc2626',pre==='no')}</form>`)));
+}
 http.createServer(async(req,res)=>{const ip=req.socket.remoteAddress,url=req.url.split('?')[0];
  try{
   if(req.method==='GET'&&(url==='/'||url==='/index.html')){res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','X-Frame-Options':'DENY'});return res.end(fs.readFileSync(path.join(__dirname,'index.html')))}
