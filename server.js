@@ -50,6 +50,17 @@ Object.assign(GAMES,{
  draw:f=>{const a=Math.floor(f(0)*13)+1,b=Math.floor(f(1)*13)+1;return{m:a>b?1.98:a==b?1:0}},
  double:(f,o)=>{const t=[2,3,5,50].includes(+o.target)?+o.target:2,p=.99/t;return{m:f(0)<p?.99/p:0}},
  keno:(f,o)=>{const A=Array.isArray(o.picks)?o.picks.map(Number):[],P=[...new Set(A)].filter(x=>Number.isInteger(x)&&x>=1&&x<=40);if(P.length<1||P.length>6||P.length!==A.length)throw Error('Pick 1 to 6 numbers');const a=[...Array(40).keys()].map(x=>x+1);let h=0;for(let i=0;i<10;i++){const j=i+Math.floor(f(i)*(40-i));[a[i],a[j]]=[a[j],a[i]];if(P.includes(a[i]))h++}return{m:kt(P.length)[h]||0}}});
+// ---- Minecraft games ----
+const SSTRIP='0000212303316140010011157144032230265212',SPAY=[[7,28,140],[9,35,170],[12,58,290],[18,95,470],[35,180,950],[60,350,1800],[95,600,3600],[240,1800,5000]],SL=[[0,0,0,0,0],[1,1,1,1,1],[2,2,2,2,2],[0,1,2,1,0],[2,1,0,1,2]];
+const WHL=(()=>{const a=Array(56).fill(0),v=[1.5,2,1.5,3,1.5,2,25,1.5,2,1.5,3,1.5,2,5];v.forEach((x,i)=>a[i*4]=x);return a})();
+const LBT=[[7139,0],[900,.5],[1000,2],[600,4],[300,10],[60,25],[1,150]],SCT=[[1500,2],[430,5],[200,10],[70,25],[6,100]];
+const tierPick=(T,tot,r)=>{let a=r*tot;for(const[w,m]of T){if(a<w)return m;a-=w}return 0};
+Object.assign(GAMES,{
+ slots:f=>{const g=[0,1,2,3,4].map(r=>{const s=Math.floor(f(r)*40);return[0,1,2].map(k=>+SSTRIP[(s+k)%40])});let w=0;for(const l of SL){const s0=g[0][l[0]];let n=1;while(n<5&&g[n][l[n]]==s0)n++;if(n>=3)w+=SPAY[s0][n-3]}return{m:Math.min(1000,w/5)}},
+ nether:f=>({m:WHL[Math.floor(f(0)*56)]}),
+ lucky:(f,o)=>{ci(o.pick,0,8,0);return{m:tierPick(LBT,10000,f(0))}},
+ scratch:f=>({m:tierPick(SCT,10000,f(0))}),
+ tnt:(f,o)=>{const N=ci(o.wires,3,6,4),S=ci(o.stages,1,3,2),P=Array.isArray(o.picks)?o.picks:[];let ok=true;for(let i=0;i<S;i++){const p=P[i];if(!Number.isInteger(p)||p<0||p>=N)throw Error('Pick a wire for every stage');if(Math.floor(f(i)*N)!==p)ok=false}return{m:ok?.96*N**S:0}}});
 for(const g in ST)GAMES[g]=(f,o)=>{const s=ST[g],L=ci(o.steps,1,10,3),c=Math.floor(Math.log(f(0)||1e-9)/Math.log(s)),p=s**L;return{m:c>=L?.99/p:0}};
 // ---- blackjack + crash (multi-step, server keeps the state) ----
 const rec=(u,g,bet,win)=>{u.lg=g;u.lgt=Date.now();const S=db.stat,p=win-bet;S.wag+=bet;S.bets++;if(p>S.big){S.big=p;S.bigWho=mask(u.email);S.bigGame=g}if(p>=200000){db.feed.push({id:++db.feedId,name:mask(u.email),g,win:p,m:bet?win/bet:0,ts:Date.now()});if(db.feed.length>40)db.feed.splice(0,db.feed.length-40)}};
@@ -165,7 +176,7 @@ http.createServer(async(req,res)=>{const ip=ipOf(req),url=req.url.split('?')[0];
   if(url==='/api/play'){if(limited('p'+u.email,60,6e4))return send(res,429,{error:'Slow down'});
    const g=GAMES[b.game],bet=b.bet;if(!g)return send(res,400,{error:'Unknown game'});
    if(!Number.isInteger(bet)||bet<MIN||bet>MAX)return send(res,400,{error:'Bet must be 100k to 2.5b'});if(bet>u.bal)return send(res,400,{error:'Not enough coins'});
-   const F=Array.from({length:14},(_,i)=>fl(u,i));let r;try{r=g(i=>F[i],b.opts||{},bet)}catch(e){return send(res,400,{error:e.message})}
+   const F=Array.from({length:24},(_,i)=>fl(u,i));let r;try{r=g(i=>F[i],b.opts||{},bet)}catch(e){return send(res,400,{error:e.message})}
    u.nonce++;const win=Math.floor(bet*r.m);rec(u,b.game,bet,win);u.bal+=win-bet;u.wag+=bet;u.profit+=win-bet;u.hist.unshift({g:b.game,bet,win,t:Date.now()});u.hist.length=Math.min(u.hist.length,50);save();
    return send(res,200,{floats:F,m:r.m,win,bal:u.bal})}
   send(res,404,{error:'Not found'})
