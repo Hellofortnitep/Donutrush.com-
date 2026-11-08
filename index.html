@@ -184,7 +184,7 @@ body.pt #app{opacity:0;transform:translateY(10px)}main{transition:opacity .18s,t
   <span class="logo" onclick="show('home')"><span style="font-size:26px">🍩</span>DONUTRUSH</span><span class="tag">DEMO</span>
   <span class="sp"></span>
   <span class="bal" id="onl" hidden>🟢 0 online</span><span class="bal" id="bal">0</span>
-  <span class="vol" title="Music"><button class="ghost" id="mb" style="padding:2px 8px" onclick="toggleMusic()">🎵</button><input type="range" id="mvol" min="0" max="100" value="60" oninput="setMV(this.value)"></span><button class="ghost" id="mt" onclick="toggleMute()">🔊</button><button class="ghost" id="ob" hidden onclick="bal+=1e9;draw()">👑 +1b</button><button class="ghost" onclick="stats()">📈 Stats</button><button class="gold" id="fc" onclick="claim()">🎁 Free coins</button><button class="gold" id="bdep" hidden onclick="openMoney('dep')">💰 Deposit</button><button class="ghost" id="bwd" hidden onclick="openMoney('wd')">🏧 Withdraw</button>  <nav id="nv"><button class="pill on" data-n="home" onclick="nav('home')">🏠 Lobby</button><button class="pill" data-n="games" onclick="nav('games')">🎮 Games</button><button class="pill" data-n="top" onclick="nav('top')">🏆 Top</button><button class="pill" data-n="tip" onclick="nav('tip')">🌧️ Rain &amp; Chat</button><button class="pill" data-n="stats" onclick="nav('stats')">📈 Stats</button><button class="pill" data-n="fair" onclick="nav('fair')">🔒 Fairness</button><button class="pill" data-n="prof" onclick="nav('prof')">👤 Profile</button></nav>
+  <span class="vol" title="Music"><button class="ghost" id="mbm" style="padding:2px 8px" onclick="toggleMusic()">🎵</button><input type="range" id="mvol" min="0" max="100" value="60" oninput="setMV(this.value)"></span><button class="ghost" id="mt" onclick="toggleMute()">🔊</button><button class="ghost" id="ob" hidden onclick="bal+=1e9;draw()">👑 +1b</button><button class="ghost" onclick="stats()">📈 Stats</button><button class="gold" id="fc" onclick="claim()">🎁 Free coins</button><button class="gold" id="bdep" hidden onclick="openMoney('dep')">💰 Deposit</button><button class="ghost" id="bwd" hidden onclick="openMoney('wd')">🏧 Withdraw</button>  <nav id="nv"><button class="pill on" data-n="home" onclick="nav('home')">🏠 Lobby</button><button class="pill" data-n="games" onclick="nav('games')">🎮 Games</button><button class="pill" data-n="top" onclick="nav('top')">🏆 Top</button><button class="pill" data-n="tip" onclick="nav('tip')">🌧️ Rain &amp; Chat</button><button class="pill" data-n="stats" onclick="nav('stats')">📈 Stats</button><button class="pill" data-n="fair" onclick="nav('fair')">🔒 Fairness</button><button class="pill" data-n="prof" onclick="nav('prof')">👤 Profile</button></nav>
 </header>
 <main>
 <section id="title" class="ttl"><div id="fl"></div><div class="tin"><div class="dn3d"></div><div class="tg">UNOFFICIAL FAN PROJECT · 18+ ONLY</div><h1>DONUTRUSH</h1><p>Provably fair mini-games, jackpots and Minecraft cases. Not affiliated with DonutSMP or Mojang.</p><button class="gold big2" onclick="SFX.start();musicAuto();show('home')">ENTER THE ARCADE →</button>
@@ -410,7 +410,7 @@ const BOTS=['CreeperKing','AlexMiner','NetherNick','EnderQueen','DiamondDan','Pi
 const mst=()=>{const a=ac();if(!a)return null;if(!master){master=a.createGain();master.gain.value=VOL;master.connect(a.destination)}return master};
 function setVol(v){VOL=v/100;if(master)master.gain.value=VOL;$('vl').textContent=v+'%'}
 let MV=.6;try{const q=localStorage.getItem('dr_mv');if(q!==null)MV=+q}catch(e){}
-function musUI(){const on=!!MUS;if($('mb'))$('mb').textContent=on?'🎶':'🎵';if($('mu'))$('mu').textContent=on?'🎶 Music on':'🎵 Music off'}
+function musUI(){const on=!!MUS;if($('mbm'))$('mbm').textContent=on?'🎶':'🎵';if($('mu'))$('mu').textContent=on?'🎶 Music on':'🎵 Music off'}
 function setMV(v){MV=v/100;try{localStorage.setItem('dr_mv',MV)}catch(e){}if($('mvol'))$('mvol').value=v}
 function musicAuto(){let off=false;try{off=localStorage.getItem('dr_music')==='off'}catch(e){}if(!off&&!MUS)toggleMusic(true)}
 function toggleMusic(auto){if(MUS){clearInterval(MUS);MUS=null;if(!auto===false){}try{localStorage.setItem('dr_music','off')}catch(e){}musUI();return}if(!ac())return;try{localStorage.setItem('dr_music','on')}catch(e){}
@@ -636,7 +636,7 @@ function goSec(id){setTimeout(()=>{const e=$(id);if(e)e.scrollIntoView({behavior
 function nav(n){SFX.click();if(n==='prof'){show('prof');return}if(n==='stats'){stats();return}if(n==='tip'){$('cp').hidden=!$('cp').hidden;if(!$('cp').hidden&&innerWidth<1000)$('cp').scrollIntoView({block:'end'});return}
  if($('home').hidden)show('home');if(n==='home'){scrollTo({top:0,behavior:'smooth'});pillOn('home');return}pillOn(n);goSec({games:'gsec',top:'tp',fair:'fair'}[n])}
 {const _s=show;show=function(g){const prev=document.body.dataset.v;_s(g);document.body.dataset.v=g;if(prev!==g&&g!=='title')SFX.whoosh();pillOn(g==='prof'?'prof':g==='home'?'home':'');const nv=$('nv');if(nv)nv.hidden=false}}
-document.addEventListener('click',e=>{const b=e.target.closest('header button:not(.pill):not(#mb)');if(b)SFX.click()});
+document.addEventListener('click',e=>{const b=e.target.closest('header button:not(.pill):not(#mbm)');if(b)SFX.click()});
 </script>
 </body>
 </html>
