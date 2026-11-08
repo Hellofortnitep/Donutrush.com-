@@ -115,26 +115,44 @@ button,.card,.chip,.nb{transition:transform .15s,box-shadow .15s,filter .15s}but
 .flash{position:fixed;inset:0;z-index:50;pointer-events:none;animation:fls .9s forwards}@keyframes fls{from{opacity:.85}to{opacity:0}}
 .wov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.8);z-index:5;animation:vin .4s}
 #bet{min-width:84px}.row .ghost{padding:10px 11px}:root{color-scheme:dark}
+
+#boot{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 40%,#241038,#08080a 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .6s}#boot.out{opacity:0;pointer-events:none}
+#boot b{letter-spacing:6px;font-size:18px;background:linear-gradient(90deg,#ff7a1a,#ffc93c);-webkit-background-clip:text;background-clip:text;color:transparent}
+#boot .bar{width:180px;height:4px;border-radius:4px;background:#2a2a33;overflow:hidden}#boot .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff7a1a,#a855f7);animation:ld 1s ease-out forwards}@keyframes ld{to{width:100%}}
+.dn3d{position:relative;width:260px;height:260px;perspective:900px;margin:0 auto;filter:drop-shadow(0 20px 28px rgba(255,122,26,.35));animation:flo 4s ease-in-out infinite}.dn3d.sm{width:96px;height:96px}
+@keyframes flo{50%{transform:translateY(-12px)}}
+.dn{position:absolute;inset:0;transform-style:preserve-3d;animation:dnr 10s linear infinite}@keyframes dnr{from{transform:rotateX(58deg) rotateZ(0)}to{transform:rotateX(58deg) rotateZ(360deg)}}
+.dl{position:absolute;inset:0;border-radius:50%;background:radial-gradient(closest-side,transparent 0 43%,#d98b3a 44% 99%,transparent 100%)}
+.dl.ic{background:radial-gradient(closest-side,transparent 0 46%,#ff5fa2 47% 88%,#ff3d8a 89% 92%,transparent 94%)}.dl.ic2{background:radial-gradient(closest-side,transparent 0 50%,rgba(255,255,255,.25) 51% 58%,transparent 60%)}
+.dn .sp{position:absolute;width:10px;height:3.5px;border-radius:2px;margin:-2px 0 0 -5px}.dn3d.sm .sp{width:4px;height:2px}
+.hero{position:relative;overflow:hidden}.hero-dn{position:absolute;right:4%;top:50%;margin-top:-110px;width:220px;height:220px;display:none}@media(min-width:900px){.hero-dn{display:block}}
+.ttl .dn3d{margin-bottom:6px}
+.gc{min-height:176px;position:relative;overflow:hidden}.gc::after{content:"";position:absolute;top:0;left:-70%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.18),transparent);transform:skewX(-20deg);transition:left .6s}.gc:hover::after{left:130%}
+#toasts{position:fixed;top:calc(70px + env(safe-area-inset-top,0px));right:14px;z-index:60;display:flex;flex-direction:column;gap:8px;max-width:calc(100% - 28px)}
+.toast{background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:10px 14px;font-size:14px;box-shadow:0 0 18px rgba(255,122,26,.4);animation:vin .35s;transition:opacity .4s,transform .4s}.toast.out{opacity:0;transform:translateX(30px)}
+.rc i{width:26px;height:26px;border-radius:50%;bottom:50%;right:50%;transform:translate(50%,50%);border:3px dashed rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff;box-shadow:0 2px 0 rgba(0,0,0,.5);pointer-events:none;padding:0}
+.rres{display:inline-flex;align-items:center;gap:10px;margin-top:8px;padding:6px 14px;border-radius:12px;background:var(--panel2);font-size:15px;font-weight:700}.rres .nb{padding:3px 10px;font-size:20px}
+.rdist{font-size:12px;color:var(--mute);margin-top:6px}
 </style>
 </head>
-<body><canvas id="bgc"></canvas>
+<body><div id="boot"><div class="dn3d sm"></div><b>DONUTRUSH</b><div class="bar"><i></i></div></div><div id="toasts"></div><canvas id="bgc"></canvas>
 <header hidden>
   <span class="logo" onclick="show('title')">🍩 DONUTRUSH</span><span class="tag">DEMO</span>
   <span class="sp"></span>
-  <span class="bal" id="bal">0</span>
+  <span class="bal" id="onl" hidden>🟢 0 online</span><span class="bal" id="bal">0</span>
   <button class="ghost" id="mt" onclick="toggleMute()">🔊</button><button class="ghost" id="ob" hidden onclick="bal+=1e9;draw()">👑 +1b</button><button class="ghost" onclick="stats()">📈 Stats</button><button class="gold" id="fc" onclick="claim()">🎁 Free coins</button><button class="gold" id="bdep" hidden onclick="openMoney('dep')">💰 Deposit</button><button class="ghost" id="bwd" hidden onclick="openMoney('wd')">🏧 Withdraw</button><button class="ghost" onclick="show('prof')">👤 Profile</button>
   
 </header>
 <main>
-<section id="title" class="ttl"><div id="fl"></div><div class="tin"><div class="tg">UNOFFICIAL FAN PROJECT · 18+ ONLY</div><h1>DONUTRUSH</h1><p>Provably fair mini-games, jackpots and Minecraft cases. Not affiliated with DonutSMP or Mojang.</p><button class="gold big2" onclick="SFX.start();show('home')">ENTER THE ARCADE →</button>
+<section id="title" class="ttl"><div id="fl"></div><div class="tin"><div class="dn3d"></div><div class="tg">UNOFFICIAL FAN PROJECT · 18+ ONLY</div><h1>DONUTRUSH</h1><p>Provably fair mini-games, jackpots and Minecraft cases. Not affiliated with DonutSMP or Mojang.</p><button class="gold big2" onclick="SFX.start();show('home')">ENTER THE ARCADE →</button>
 <div class="feat"><div>⚡<b>Instant</b><small>Play in one click</small></div><div>🔒<b>Provably fair</b><small>Verify every bet</small></div><div>🌧️<b>Live rain</b><small>Chat and win together</small></div><div>💰<b>Deposit &amp; withdraw</b><small>DonutSMP money</small></div></div></div></section>
 <section id="home" hidden>
-  <div class="hero"><h1>DonutSMP games, <span style="color:var(--gold)">provably fair</span>.</h1>
+  <div class="hero"><div class="dn3d hero-dn"></div><h1>DonutSMP games, <span style="color:var(--gold)">provably fair</span>.</h1>
   <p>Deposit DonutSMP money, play 20+ provably fair games, withdraw anytime. Unofficial fan project, 18+ only.</p>
   <div class="jp">🏆 PROGRESSIVE JACKPOT <b id="jpc">0</b><small>(simulated)</small></div><br><button class="gold" onclick="show('coinflip')">Play Coinflip</button> <button class="ghost" onclick="show('jackpot')">Join Jackpot</button></div>
   <h2>Games</h2>
   <div class="grid" id="gg"></div>
-  <h2>📡 Live activity <small class="mono">simulated players</small></h2><div class="panel" id="lf"></div><h2>Your recent bets</h2><div class="panel" id="hist"><small class="mono">Nothing yet. Place a bet or make a deposit.</small></div>
+  <h2>🏆 Top players <small class="mono">live</small></h2><div class="panel" id="tp"><small class="mono">Sign in to see the live leaderboard.</small></div><h2>📡 Live activity <small class="mono">simulated players</small></h2><div class="panel" id="lf"></div><h2>Your recent bets</h2><div class="panel" id="hist"><small class="mono">Nothing yet. Place a bet or make a deposit.</small></div>
   <h2 id="fair">Fairness</h2>
   <div class="panel">
     <label>Server seed hash (committed before you bet)</label><div class="mono" id="sh"></div>
@@ -438,17 +456,60 @@ async function bjSrv(){const b=parse($('bet').value),s0=await api('/api/bj/start
   window.bj=async h=>{const s=await api(h?'/api/bj/hit':'/api/bj/stand',{});if(s.error)return alert(s.error);show(s)};show(s0)})}
 {const c0=G.crash.r,b0=G.blackjack.r;G.crash.r=()=>SRV?crashSrv():c0();G.blackjack.r=()=>SRV?bjSrv():b0();G.crash.own=1;G.blackjack.own=1;G.blackjack.srv=1}
 let lastId=0,firstPoll=true,liveOn=false;
-function addMsg(m){const el=$('cm'),d=document.createElement('div');if(m.kind=='tip'){d.className='tipc';d.textContent='💸 '+m.name+' tipped '+fmt(+m.amt||0)+' to the rain'}else if(m.kind=='rain'){d.className='tipc';d.textContent=m.text}else{const b=document.createElement('b');d.className='cmsg';if(/^(BRONZE|SILVER|GOLD|DIAMOND)$/.test(m.rk||'')){const q=document.createElement('span');q.className='bd '+m.rk;q.textContent=m.rk;d.append(q)}b.textContent=m.name+': ';d.append(b,document.createTextNode(m.text))}el.append(d)}
+function addMsg(m){const el=$('cm'),d=document.createElement('div');if(m.kind=='tip'){d.className='tipc';d.textContent='💸 '+m.name+' tipped '+fmt(+m.amt||0)+' to the rain'}else if(m.kind=='rain'){d.className='tipc';d.textContent=m.text;if(!firstPoll)toast(m.text,'🌧️')}else{const b=document.createElement('b');d.className='cmsg';if(/^(BRONZE|SILVER|GOLD|DIAMOND)$/.test(m.rk||'')){const q=document.createElement('span');q.className='bd '+m.rk;q.textContent=m.rk;d.append(q)}b.textContent=m.name+': ';d.append(b,document.createTextNode(m.text))}el.append(d)}
 async function livePoll(){try{const r=await api('/api/live?since='+lastId+'&fs='+lastFeed);if(r.error)return;liveReal(r);const el=$('cm');let fresh=false;r.msgs.forEach(m=>{addMsg(m);lastId=Math.max(lastId,m.id);if(!firstPoll&&m.kind!='tip')fresh=true});firstPoll=false;while(el.children.length>80)el.firstChild.remove();if(r.msgs.length){el.scrollTop=1e9;if(fresh)SFX.ping()}
  const l=r.rain.left;$('rpot').textContent=fmt(r.rain.pot);$('rinfo').textContent=`${Math.floor(l/60000)}:${String(Math.floor(l/1000)%60).padStart(2,'0')} · ${r.rain.n} joined`;$('rfill').style.width=((1-l/(r.rain.len||120000))*100)+'%';$('rj').disabled=r.rain.me;$('cst').textContent='👥 '+r.online+' online';
  if(!$('go').disabled||$('game').hidden){if(r.bal>bal)SFX.coins();bal=r.bal;draw()}}catch(e){}}
-function liveReal(r){const el=$('lf');if(r.feed&&el){r.feed.forEach(f=>{lastFeed=Math.max(lastFeed,f.id);const d=document.createElement('div'),a=document.createElement('span'),b=document.createElement('b');d.className='tx';a.textContent='🟢 '+f.name+' won '+fmt(f.win)+' on '+String(f.g);b.className='win';b.textContent=(+f.m).toFixed(2)+'×';d.append(a,b);el.prepend(d);const w=el.querySelector('.none');if(w)w.remove();while(el.children.length>8)el.lastChild.remove()})}
- if(r.stat){const e=$('jpc');if(e)e.textContent=fmt(r.stat.big)+(r.stat.bigWho?' · '+r.stat.bigWho:'')}if(r.crash)CRH=r.crash.map(Number);if(r.playing)document.querySelectorAll('#gg .card').forEach(c=>{const m=/show\('(\w+)'\)/.exec(c.getAttribute('onclick')||''),s=c.querySelector('small');if(m&&s)s.innerHTML='<span class="dot"></span>'+(r.playing[m[1]]||0)+' playing'})}
+function liveReal(r){if(r.online!==undefined){const o=$('onl');o.hidden=false;o.textContent='🟢 '+r.online+' online'}if(lbN++%8==0)topLB();const el=$('lf');if(r.feed&&el){r.feed.forEach(f=>{lastFeed=Math.max(lastFeed,f.id);if(feedReady&&f.win>=1e6)toast(f.name+' won '+fmt(f.win)+' on '+String(f.g),'🎉');const d=document.createElement('div'),a=document.createElement('span'),b=document.createElement('b');d.className='tx';a.textContent='🟢 '+f.name+' won '+fmt(f.win)+' on '+String(f.g);b.className='win';b.textContent=(+f.m).toFixed(2)+'×';d.append(a,b);el.prepend(d);const w=el.querySelector('.none');if(w)w.remove();while(el.children.length>8)el.lastChild.remove()})}
+ if(r.stat){const e=$('jpc');if(e)e.textContent=fmt(r.stat.big)+(r.stat.bigWho?' · '+r.stat.bigWho:'')}if(r.crash)CRH=r.crash.map(Number);feedReady=true;if(r.playing)document.querySelectorAll('#gg .card').forEach(c=>{const m=/show\('(\w+)'\)/.exec(c.getAttribute('onclick')||''),s=c.querySelector('small');if(m&&s)s.innerHTML='<span class="dot"></span>'+(r.playing[m[1]]||0)+' playing'})}
 function startLive(){if(liveOn)return;liveOn=true;{const j=document.querySelector('.jp');if(j)j.innerHTML='🏆 BIGGEST WIN EVER <b id="jpc">…</b><small>(real players)</small>';const h=document.querySelector('#lf').previousElementSibling;if(h)h.innerHTML='📡 Live activity <small class="mono">real wins of 200k+</small>';$('lf').innerHTML='<small class="mono none">Waiting for the next big win…</small>'}$('nm').hidden=true;livePoll();setInterval(livePoll,2000)}
 {const s0=send,t0=tip,j0=joinRain;
  send=async function(){if(!SRV)return s0();const t=$('ci').value.trim();if(!t)return;$('ci').value='';const r=await api('/api/chat',{text:t});if(r.error)$('cst').textContent=r.error;else livePoll()};
  tip=async function(){if(!SRV)return t0();const r=await api('/api/rain/tip',{amount:parse($('ra').value)});if(r.error)return alert(r.error);bal=r.bal;draw();SFX.coins();livePoll()};
  joinRain=async function(){if(!SRV)return j0();const r=await api('/api/rain/join',{});if(r.error)return alert(r.error);SFX.coins();livePoll()}}
+let lbN=0,feedReady=false;
+function toast(t,ic){const c=$('toasts'),d=document.createElement('div');d.className='toast';d.textContent=(ic||'🎉')+' '+t;c.append(d);SFX.ping();setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),450)},4500);while(c.children.length>3)c.firstChild.remove()}
+function mkDonut(el){let h='<div class="dn">';for(let k=0;k<10;k++)h+=`<i class="dl" style="transform:translateZ(${k*2}px);filter:brightness(${.8+k*.027})"></i>`;
+ h+='<i class="dl ic" style="transform:translateZ(21px)"></i><i class="dl ic2" style="transform:translateZ(23px)"></i>';const C=['#ffffff','#22e6ff','#ffe14d','#7cff6b','#ff7a1a','#a855f7'];
+ for(let i=0;i<34;i++){const a=Math.random()*6.283,r=29+Math.random()*12;h+=`<b class="sp" style="left:${50+Math.cos(a)*r}%;top:${50+Math.sin(a)*r}%;background:${C[i%6]};transform:translateZ(25px) rotate(${Math.floor(Math.random()*180)}deg)"></b>`}el.innerHTML=h+'</div>'}
+document.querySelectorAll('.dn3d').forEach(mkDonut);
+addEventListener('load',()=>setTimeout(()=>{const b=$('boot');if(b){b.classList.add('out');setTimeout(()=>b.remove(),700)}},900));setTimeout(()=>{const b=$('boot');if(b)b.remove()},5000);
+async function topLB(){if(!SRV||$('home').hidden)return;try{const L=await api('/api/leaderboard'),el=$('tp');el.textContent='';if(!L.length){el.innerHTML='<small class="mono">No players yet.</small>';return}
+ L.slice(0,5).forEach((p,i)=>{const d=document.createElement('div'),a=document.createElement('span'),b=document.createElement('b');d.className='tx';a.textContent=(['🥇','🥈','🥉'][i]||'#'+(i+1))+' '+p.user;b.className=p.profit>=0?'win':'lose';b.textContent=(p.profit>=0?'+':'−')+fmt(Math.abs(p.profit));d.append(a,b);el.append(d)})}catch(e){}}
+{const s0=show;show=function(g){s0(g);if(g==='home')topLB()}}
+// ---- roulette v3 ----
+let rst=[],rlast=null,rall=[];const chipFor=a=>{let c=CH[0];for(const x of CH)if(a>=x[0])c=x;return c};
+rbet=function(k){const ch=parse($('bet').value);if(!ch||ch<1e5||ch>2.5e9)return alert('Chip size (bet amount) must be 100k to 2.5b.');if(G.roulette.stake()+ch>2.5e9)return alert('Total stake max is 2.5b.');rb[k]=(rb[k]||0)+ch;rst.push([k,ch]);SFX.chip();rupd()};
+rupd=function(){document.querySelectorAll('.rc i').forEach(i=>{i.textContent='';i.style.background=''});for(const k in rb){const e=$('ri_'+k);if(!e)continue;e.textContent=fmt(rb[k]);e.style.background=chipFor(rb[k])[2]}const n=Object.keys(rb).length;if($('rtot'))$('rtot').textContent='Total stake: '+fmt(G.roulette.stake())+' · '+n+' spot'+(n==1?'':'s')};
+function rundo(){const x=rst.pop();if(!x)return;rb[x[0]]-=x[1];if(rb[x[0]]<=0)delete rb[x[0]];SFX.click();rupd()}
+function rclear(){rb={};rst=[];rupd()}
+function rrebet(){if(!rlast)return alert('No previous bet to repeat.');rb={...rlast};rst=Object.entries(rb);if(G.roulette.stake()>2.5e9){rb={};rst=[];return alert('Total stake max is 2.5b.')}SFX.chip();rupd()}
+function rdbl(){const t=G.roulette.stake();if(!t)return;if(t*2>2.5e9)return alert('Total stake max is 2.5b.');for(const k in rb)rb[k]*=2;rst=Object.entries(rb);SFX.chip();rupd()}
+function wheel2(rot){let w='';ORD.forEach((n,i)=>{const a0=i*SL-SL/2,a1=i*SL+SL/2,P=(r,a)=>[160+r*Math.sin(a*Math.PI/180),160-r*Math.cos(a*Math.PI/180)],[x0,y0]=P(128,a0),[x1,y1]=P(128,a1),[x2,y2]=P(98,a1),[x3,y3]=P(98,a0);
+ w+=`<path d="M${x0} ${y0}A128 128 0 0 1 ${x1} ${y1}L${x2} ${y2}A98 98 0 0 0 ${x3} ${y3}Z" fill="${{g:'#059669',r:'#e11d48',k:'#15151d'}[col(n)]}" stroke="#d4af37" stroke-width=".7"/><text x="160" y="46" transform="rotate(${i*SL} 160 160)" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">${n}</text>`});
+ return `<svg viewBox="0 0 320 330" style="width:min(340px,86vw);display:block;margin:auto"><defs><radialGradient id="rw" cx="50%" cy="50%" r="50%"><stop offset="88%" stop-color="#5a3512"/><stop offset="100%" stop-color="#2b1708"/></radialGradient><radialGradient id="cn" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#6b4aa8"/><stop offset="100%" stop-color="#1b1030"/></radialGradient></defs>
+ <circle cx="160" cy="160" r="158" fill="url(#rw)" stroke="#d4af37" stroke-width="3"/><circle cx="160" cy="160" r="146" fill="#0e0a18" stroke="#8a6d1a" stroke-width="1.5"/>
+ <g id="wg2" style="transform-origin:160px 160px;transform:rotate(${rot}deg)">${w}<circle cx="160" cy="160" r="98" fill="url(#cn)" stroke="#d4af37" stroke-width="2"/><circle cx="160" cy="160" r="60" fill="none" stroke="#d4af37" stroke-opacity=".4"/><circle cx="160" cy="160" r="16" fill="#d4af37"/><path d="M160 80L166 160L160 240L154 160Z" fill="#d4af37" opacity=".85"/><path d="M80 160L160 154L240 160L160 166Z" fill="#d4af37" opacity=".85"/></g>
+ <circle id="bl2" cx="160" cy="22" r="6.5" fill="#fff" stroke="#bbb" style="filter:drop-shadow(0 0 4px #fff)"/><polygon points="160,14 150,-6 170,-6" fill="#ffb300" stroke="#fff"/><text id="wc2" x="160" y="171" text-anchor="middle" font-size="30" font-weight="900" fill="#fff" style="paint-order:stroke;stroke:#000;stroke-width:3px">🎡</text></svg>`}
+function spinWheel(i,T){return new Promise(res=>{const w0=wrot,fin=w0+360*(5+Math.floor(Math.random()*2))+((((-i*SL-w0)%360)+360)%360),B=3240,t0=performance.now(),wg=$('wg2'),bl=$('bl2');let lp=-1,lt=0;
+ const fr=now=>{const t=Math.min(1,(now-t0)/T),wa=w0+(fin-w0)*(1-Math.pow(1-t,3)),ba=-B*(1-Math.pow(1-t,2.2));let R=t<.6?138:114+24*Math.pow(Math.max(0,1-(t-.6)/.4),1.4);if(t>.78)R+=Math.abs(Math.sin((t-.78)*48))*9*(1-t)/.22;
+  wg.style.transform=`rotate(${wa}deg)`;bl.setAttribute('cx',160+R*Math.sin(ba*Math.PI/180));bl.setAttribute('cy',160-R*Math.cos(ba*Math.PI/180));
+  const rel=(((ba-wa)%360)+360)%360,p=Math.floor(rel/SL);if(p!==lp&&t>.3&&now-lt>40){lp=p;lt=now;SFX.tick(.8+t*.5)}
+  if(t<1)requestAnimationFrame(fr);else{wrot=fin;res()}};requestAnimationFrame(fr)})}
+function rhud(){const h=$('rhist');if(!h)return;h.innerHTML=rall.slice(-14).map(n=>`<span class="nb ${col(n)}" style="padding:2px 8px;margin:1px">${n}</span>`).join('')+(rall.length?(()=>{const L=rall.slice(-20),c={r:0,k:0,g:0};L.forEach(n=>c[col(n)]++);return `<div class="rdist">Last ${L.length}: <span style="color:#ff4d6d">Red ${c.r}</span> · Black ${c.k} · <span style="color:#2ee59d">Green ${c.g}</span></div>`})():'<div class="rdist">Spin to start the history.</div>')}
+G.roulette={n:'Roulette',i:'🎡',d:'European wheel · tap the table to stack chips',srv:1,opts:()=>({bets:rb}),stake:()=>Object.values(rb).reduce((a,b)=>a+b,0),ok:()=>G.roulette.stake()?'':'Place a chip on the table first.',
+ c:()=>{rb={};rst=[];setTimeout(()=>{rupd();$('vis').innerHTML=wheel2(wrot)+'<div id="rhist"></div>';rhud();let h=rcell('n0','0','g','grid-column:1;grid-row:1/4');
+  for(let c=0;c<12;c++)for(let r=0;r<3;r++){const n=3*c+3-r;h+=rcell('n'+n,n,col(n),`grid-column:${c+2};grid-row:${r+1}`)}
+  for(let r=0;r<3;r++)h+=rcell('c'+(3-r),'2:1','',`grid-column:14;grid-row:${r+1}`);
+  ['1st 12','2nd 12','3rd 12'].forEach((l,i)=>h+=rcell('d'+(i+1),l,'',`grid-column:${2+i*4}/${6+i*4};grid-row:4`));
+  [['low','1-18',''],['even','Even',''],['red','Red','r'],['black','Black','k'],['odd','Odd',''],['high','19-36','']].forEach((x,i)=>h+=rcell(x[0],x[1],x[2],`grid-column:${2+i*2}/${4+i*2};grid-row:5`));
+  $('xt').innerHTML=`<div class="panel" style="overflow-x:auto"><div class="rt">${h}</div></div>`},0);
+  return `<label>Chip value</label><div class="chips">${CH.map((c,i)=>`<button class="chip${i==0?' sel':''}" style="--c:${c[2]}" onclick="chipv(${i})">${c[1]}</button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="ghost" onclick="rundo()">↩ Undo</button><button class="ghost" onclick="rrebet()">🔁 Rebet</button><button class="ghost" onclick="rdbl()">2×</button><button class="ghost" onclick="rclear()">Clear</button></div><div class="mono" style="margin-top:8px">Outside bets 2× · dozens/columns 3× · numbers 36×</div><div id="rtot" class="mono" style="margin-top:6px"></div>`},
+ r:async()=>{const n=Math.floor(await roll()*37),i=ORD.indexOf(n),mine={...rb},stake=G.roulette.stake();document.querySelectorAll('.rc.win').forEach(e=>e.classList.remove('win'));
+  $('vis').innerHTML=wheel2(wrot)+'<div id="rhist"></div>';rhud();SFX.spin();await spinWheel(i,6200);
+  const wc=$('wc2');if(wc)wc.textContent=n;const rc=$('rc_n'+n);if(rc)rc.classList.add('win');rlast=mine;rall.push(n);rhud();
+  let ret=0;for(const k in mine){const a=mine[k];ret+=a*(k=='n'+n?36:k=='red'?(col(n)=='r'?2:0):k=='black'?(col(n)=='k'?2:0):k=='even'?(n>0&&n%2==0?2:0):k=='odd'?(n%2==1?2:0):k=='low'?(n>=1&&n<=18?2:0):k=='high'?(n>=19?2:0):k[0]=='d'?(n>0&&Math.ceil(n/12)==+k[1]?3:0):k[0]=='c'?(n>0&&(n%3||3)==+k[1]?3:0):0)}
+  return{m:ret/stake,t:`<span class="rres"><span class="nb ${col(n)}">${n}</span>${{r:'Red',k:'Black',g:'Green'}[col(n)]}</span>`,pill:`<span class="hp ${col(n)}">${n}</span>`}}};
 const PL={};function grid(){$('gg').innerHTML=Object.entries(G).map(([k,o],i)=>{PL[k]=PL[k]||Math.floor(4+Math.random()*80);return `<div class="card gc" style="--h:${(i*47+300)%360}" onclick="show('${k}')"><div class="ic">${o.i}</div><b>${o.n}</b><small><span class="dot"></span>${PL[k]} playing</small></div>`}).join('')}
 function show(g){document.body.classList.toggle('side',g!=='title');$('title').hidden=g!=='title';document.querySelector('header').hidden=g==='title';$('fab').hidden=g==='title';if(g==='title')$('cp').hidden=true;else if(matchMedia('(min-width:1000px)').matches)$('cp').hidden=false;$('home').hidden=g!=='home';$('prof').hidden=g!=='prof';$('game').hidden=['home','title','prof'].includes(g);{const v=$(['home','prof','title'].includes(g)?g:'game');v.classList.remove('vin');void v.offsetWidth;v.classList.add('vin')}if(['home','title','prof'].includes(g)){scrollTo(0,0);if(g==='prof')profRender();return}mode=g;const o=G[g];$('gt').textContent=o.i+' '+o.n;$('xt').innerHTML='';$('ctl').innerHTML=o.c();hsr();$('vis').innerHTML=o.i;$('res').textContent=o.d;$('go').disabled=false;scrollTo(0,0)}
 function mul(x){const v=parse($('bet').value);if(v)$('bet').value=fmt(v*x)}
