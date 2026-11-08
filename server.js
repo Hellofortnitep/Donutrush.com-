@@ -161,7 +161,7 @@ http.createServer(async(req,res)=>{const ip=ipOf(req),url=req.url.split('?')[0];
   if(url==='/api/crash/poll'){if(limited('cr'+u.email,900,6e4))return send(res,429,{error:'Slow down'});if(!u.cr)return send(res,400,{error:'No active round'});return send(res,200,crSettle(u,!!b.cash))}
   if(url==='/api/claim'){if(!process.env.FREE_COINS)return send(res,400,{error:'Free coins are disabled'});if(Date.now()-u.claimAt<CLAIM_MS)return send(res,400,{error:'Free coins not ready yet'});u.claimAt=Date.now();u.bal+=CLAIM;save();return send(res,200,pub(u))}
   if(url==='/api/seed/rotate'){if(u.bj||u.cr)return send(res,400,{error:'Finish your current round first'});const old=u.seed;u.seed=crypto.randomBytes(32).toString('hex');u.nonce=0;save();return send(res,200,{oldSeed:old,seedHash:sha(u.seed)})}
-  if(url==='/api/play'){if(limited('p'+u.name,60,6e4))return send(res,429,{error:'Slow down'});
+  if(url==='/api/play'){if(limited('p'+u.email,60,6e4))return send(res,429,{error:'Slow down'});
    const g=GAMES[b.game],bet=b.bet;if(!g)return send(res,400,{error:'Unknown game'});
    if(!Number.isInteger(bet)||bet<MIN||bet>MAX)return send(res,400,{error:'Bet must be 100k to 2.5b'});if(bet>u.bal)return send(res,400,{error:'Not enough coins'});
    const F=Array.from({length:14},(_,i)=>fl(u,i));let r;try{r=g(i=>F[i],b.opts||{},bet)}catch(e){return send(res,400,{error:e.message})}
