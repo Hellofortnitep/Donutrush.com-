@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>DonutSMP Casino – Provably Fair DonutSMP Games</title>
+<title>DonutRush – Provably Fair DonutSMP Games</title>
 <style>
 :root{--bg:#08080a;--panel:#131316;--panel2:#1c1c21;--line:#33333c;--text:#fff;--mute:#a39cae;--gold:#ff7a1a;--gold2:#a855f7;--on-gold:#fff;--win:#2ee59d;--lose:#ff5470;--cy:#ffc93c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -119,14 +119,14 @@ button,.card,.chip,.nb{transition:transform .15s,box-shadow .15s,filter .15s}but
 </head>
 <body><canvas id="bgc"></canvas>
 <header hidden>
-  <span class="logo" onclick="show('title')">🍩 DONUTSMP CASINO</span><span class="tag">DEMO</span>
+  <span class="logo" onclick="show('title')">🍩 DONUTRUSH</span><span class="tag">DEMO</span>
   <span class="sp"></span>
   <span class="bal" id="bal">0</span>
   <button class="ghost" id="mt" onclick="toggleMute()">🔊</button><button class="ghost" id="ob" hidden onclick="bal+=1e9;draw()">👑 +1b</button><button class="ghost" onclick="stats()">📈 Stats</button><button class="gold" id="fc" onclick="claim()">🎁 Free coins</button><button class="gold" id="bdep" hidden onclick="openMoney('dep')">💰 Deposit</button><button class="ghost" id="bwd" hidden onclick="openMoney('wd')">🏧 Withdraw</button><button class="ghost" onclick="show('prof')">👤 Profile</button>
   
 </header>
 <main>
-<section id="title" class="ttl"><div id="fl"></div><div class="tin"><div class="tg">UNOFFICIAL FAN PROJECT · 18+ ONLY</div><h1>DONUTSMP<br>CASINO</h1><p>Provably fair mini-games, jackpots and Minecraft cases. Not affiliated with DonutSMP or Mojang.</p><button class="gold big2" onclick="SFX.start();show('home')">ENTER THE ARCADE →</button>
+<section id="title" class="ttl"><div id="fl"></div><div class="tin"><div class="tg">UNOFFICIAL FAN PROJECT · 18+ ONLY</div><h1>DONUTRUSH</h1><p>Provably fair mini-games, jackpots and Minecraft cases. Not affiliated with DonutSMP or Mojang.</p><button class="gold big2" onclick="SFX.start();show('home')">ENTER THE ARCADE →</button>
 <div class="feat"><div>⚡<b>Instant</b><small>Play in one click</small></div><div>🔒<b>Provably fair</b><small>Verify every bet</small></div><div>🌧️<b>Live rain</b><small>Chat and win together</small></div><div>💰<b>Deposit &amp; withdraw</b><small>DonutSMP money</small></div></div></div></section>
 <section id="home" hidden>
   <div class="hero"><h1>DonutSMP games, <span style="color:var(--gold)">provably fair</span>.</h1>
@@ -161,7 +161,7 @@ button,.card,.chip,.nb{transition:transform .15s,box-shadow .15s,filter .15s}but
     <div id="ctl" style="margin-top:14px"></div>
     <button class="gold" id="go" style="width:100%;margin-top:14px;padding:14px" onclick="play()">Bet</button>
   </div>
-<div class="bb"><span class="logo">DONUTSMP CASINO</span><button class="ghost" onclick="show('home');$('fair').scrollIntoView()">🛡️ Fairness</button></div></section>
+<div class="bb"><span class="logo">DONUTRUSH</span><button class="ghost" onclick="show('home');$('fair').scrollIntoView()">🛡️ Fairness</button></div></section>
 
 <p class="notice">Unofficial fan-made project. Not affiliated with or endorsed by DonutSMP or Mojang. 18+ only. Gambling can be addictive, so play responsibly. Deposits and withdrawals use DonutSMP in-game money and are confirmed manually by the site owner.</p>
 </main>
@@ -176,7 +176,7 @@ button,.card,.chip,.nb{transition:transform .15s,box-shadow .15s,filter .15s}but
 <script>
 const $=id=>document.getElementById(id);
 let bal=1000000,nonce=0,serverSeed=rnd(32),mode='',side='heads',over=true,hist=[];
-const BOT='DonutSMP CasinoBot';
+const BOT='DonutRushBot';
 function rnd(n){return [...crypto.getRandomValues(new Uint8Array(n))].map(b=>b.toString(16).padStart(2,'0')).join('')}
 async function sha(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 async function hmac(k,m){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(k),{name:'HMAC',hash:'SHA-256'},false,['sign']);const s=await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(m));return [...new Uint8Array(s)].map(x=>x.toString(16).padStart(2,'0')).join('')}
@@ -299,7 +299,7 @@ function send(){const t=$('ci').value.trim();if(!t)return;if(!DB)return($('cst')
 async function initLive(){try{const c=window.claude;DB=c&&await c.use('db');if(!DB)throw 0;try{const U=await c.use('user');uid=(U&&await U.id())||uid;if(!SRV&&U&&await U.isOwner()){$('ob').hidden=false;bal+=1e9;draw()}}catch(e){}
  DB.collection('chat').orderBy('ts','desc').limit(40).onSnapshot(sn=>{const el=$('cm');el.textContent='';const q0=sn.docs[0]&&sn.docs[0].data();if(q0){if(lt&&q0.ts>lt&&q0.uid!==uid)SFX.ping();lt=q0.ts}sn.docs.map(d=>d.data()).reverse().forEach(m=>{const d=document.createElement('div');if(m.kind=='tip'){d.className='tipc';d.textContent='💸 '+String(m.name||'?')+' tipped '+fmt(+m.amt||0)+' to the rain'}else{const b=document.createElement('b');d.className='cmsg';if(m.rk&&/^(BRONZE|SILVER|GOLD|DIAMOND)$/.test(m.rk)){const q=document.createElement('span');q.className='bd '+m.rk;q.textContent=m.rk;d.append(q)}b.textContent=String(m.name||'?')+': ';d.append(b,document.createTextNode(String(m.text||'')))}el.append(d)});el.scrollTop=1e9},()=>{});
  subRain();setInterval(tickRain,1000)}catch(e){$('cst').textContent='Live chat and rain only work for signed-in viewers of this page.'}}
-floaties();addEventListener('load',async()=>{await initAuth();setTimeout(initLive,100)});
+floaties();addEventListener('load',async()=>{await initAuth();if(!SRV)setTimeout(initLive,100)});
 let AC=null,MUTE=false,lt=0;const HS={};
 const ac=()=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume()}catch(e){}return AC};
 function tone(f,d,ty,v,t0,f2){const a=ac();if(!a||MUTE)return;const t=a.currentTime+(t0||0),o=a.createOscillator(),g=a.createGain();o.type=ty||'sine';o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.12,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(mst());o.start(t);o.stop(t+d+.03)}
@@ -409,7 +409,7 @@ jackpot:{n:'Jackpot',i:'🏆',d:'Add coins to the pot · win chance = your share
   return{m:me?j.tot*.95/bet:0,t:`${j.P[j.w].name} won the ${fmt(j.tot)} pot`,quiet:me}}}});
 Object.assign(G.roulette,{srv:1,opts:()=>({bets:rb})});Object.assign(G.crash,{srv:1,opts:()=>({target:parseFloat(f('t'))||2})});
 let srvOn=false;
-function srvUI(){document.querySelectorAll('header .tag').forEach(e=>e.hidden=true);$('bdep').hidden=false;$('bwd').hidden=false;$('fc').hidden=true;if(srvOn)return;srvOn=true;setInterval(async()=>{try{const m=await api('/api/me');if(m.bal!==undefined&&!$('go').disabled&&m.bal!==bal){const up=m.bal>bal;bal=m.bal;draw();if(up)SFX.coins()}}catch(e){}},12000)}
+function srvUI(){startLive();document.querySelectorAll('header .tag').forEach(e=>e.hidden=true);$('bdep').hidden=false;$('bwd').hidden=false;$('fc').hidden=true;if(srvOn)return;srvOn=true;setInterval(async()=>{try{const m=await api('/api/me');if(m.bal!==undefined&&!$('go').disabled&&m.bal!==bal){const up=m.bal>bal;bal=m.bal;draw();if(up)SFX.coins()}}catch(e){}},12000)}
 async function openMoney(m){const dep=m=='dep',tx=await api('/api/txs').catch(()=>[]);
  $('mb').innerHTML=`<h3 style="margin-top:0">${dep?'💰 Deposit':'🏧 Withdraw'}</h3>`+(dep
   ?`<p style="font-size:14px">1. Enter the amount and your <b>exact DonutSMP username</b>.<br>2. In DonutSMP run: <code id="mc">/pay Hellofortnitep …</code>3. Press <b>I've paid</b>. You're credited once the owner confirms.</p>`
@@ -421,11 +421,37 @@ async function openMoney(m){const dep=m=='dep',tx=await api('/api/txs').catch(()
 function mcmd(){const c=$('mc'),a=parse($('ma').value);if(c)c.textContent=a?`/pay Hellofortnitep ${a}`:'/pay Hellofortnitep …'}
 async function sendMoney(m){const a=parse($('ma').value),r=await api(m=='dep'?'/api/deposit':'/api/withdraw',{amount:a,ign:$('mi').value.trim()});
  if(r.error){$('me').className='lose';$('me').textContent=r.error;return}if(r.bal!==undefined){bal=r.bal;draw()}SFX.coins();$('me').className='win';$('me').textContent=m=='dep'?'Sent! The owner was emailed and will confirm once they see your payment.':'Request sent! The owner will pay you in-game soon.';setTimeout(()=>openMoney(m),1600)}
+const OPS={dice:()=>({target:+f('tg'),mode:f('o')}),limbo:()=>({target:parseFloat(f('t'))||2}),mines:()=>({mines:f('mn'),picks:f('pk')}),plinko:()=>({risk:f('o')}),rps:()=>({pick:f('o')}),pigrace:()=>({pick:f('o')}),upgrader:()=>({target:+f('tg')}),stocks:()=>({pick:f('o')}),draw:()=>({}),double:()=>({target:f('o')}),keno:()=>({picks:[...kp]})};
+for(const k of['towers','chicken','lava','stripmine'])OPS[k]=()=>({steps:f('L')});
+for(const k in OPS){G[k].srv=1;G[k].opts=OPS[k]}
+async function crashSrv(){const b=parse($('bet').value),t=parseFloat(f('t'))||0,s0=await api('/api/crash/start',{bet:b,target:t});if(s0.error)return{err:s0.error};bal=s0.bal;draw();
+ CB=Array.from({length:5},(_,i)=>({n:BOTS[(Math.floor(Math.random()*12)+i)%12],b:Math.floor(100+Math.random()*900)*1000,t:1.1+Math.random()*4}));
+ return new Promise(res=>{const st=Date.now(),pts=[];let done=0,busy=0,cash=0,tk=0;
+  const ui=(m,k,x)=>{const tx=Math.max(6,pts.length?pts[pts.length-1][0]:6),my=Math.max(2,m*1.1);$('vis').innerHTML=`<div style="color:${k=='c'?'var(--lose)':k=='w'?'var(--win)':'var(--cy)'}">${m.toFixed(2)}×${k=='c'?' 💥':''}</div><svg viewBox="0 0 300 120" style="width:100%;max-width:420px"><polyline fill="none" stroke="var(--gold)" stroke-width="3" points="${pts.map(([e,v])=>(e/tx*300)+','+(115-(v-1)/(my-1)*110)).join(' ')}"/></svg>${k?'':'<br><button class="gold" onclick="cashNow()">Cash out</button>'}${cbh(m,k,x||1e9)}`};
+  window.cashNow=()=>{cash=1};ui(1);
+  const iv=setInterval(async()=>{if(busy||done)return;busy=1;let r;try{r=await api('/api/crash/poll',{cash:cash})}catch(e){busy=0;return}busy=0;cash=0;
+   if(r.error){clearInterval(iv);done=1;return res({err:r.error})}pts.push([(Date.now()-st)/1000,r.m]);
+   if(r.done){done=1;clearInterval(iv);const w=r.win>0;ui(r.m,w?'w':'c',r.x);w?SFX.coins():SFX.boom();res({m:r.win/b,sw:r.win,sbal:r.bal,t:w?`Cashed out at ${r.m.toFixed(2)}× (it crashed at ${r.x.toFixed(2)}×)`:`Crashed at ${r.x.toFixed(2)}×`})}
+   else{ui(r.m);if(++tk%3==0)SFX.tick(1+r.m*.12)}},120)})}
+async function bjSrv(){const b=parse($('bet').value),s0=await api('/api/bj/start',{bet:b});if(s0.error)return{err:s0.error};bal=s0.bal;draw();
+ return new Promise(res=>{const show=s=>{SFX.card();$('vis').innerHTML=`<div style="font-size:14px">Dealer ${s.done?s.dv:''}</div>${s.d.map(pc).join('')}${s.done?'':'<span class="pc" style="background:var(--panel2);color:var(--gold)">?</span>'}<div style="font-size:14px;margin-top:8px">You ${s.pv}</div>${s.p.map(pc).join('')}${s.done?'':'<div class="row" style="justify-content:center;margin-top:10px"><button class="gold" onclick="bj(1)">Hit</button><button class="ghost" onclick="bj(0)">Stand</button></div>'}`;if(s.done)res({m:s.m,sw:s.win,sbal:s.bal,t:s.msg})};
+  window.bj=async h=>{const s=await api(h?'/api/bj/hit':'/api/bj/stand',{});if(s.error)return alert(s.error);show(s)};show(s0)})}
+{const c0=G.crash.r,b0=G.blackjack.r;G.crash.r=()=>SRV?crashSrv():c0();G.blackjack.r=()=>SRV?bjSrv():b0();G.crash.own=1;G.blackjack.own=1;G.blackjack.srv=1}
+let lastId=0,firstPoll=true,liveOn=false;
+function addMsg(m){const el=$('cm'),d=document.createElement('div');if(m.kind=='tip'){d.className='tipc';d.textContent='💸 '+m.name+' tipped '+fmt(+m.amt||0)+' to the rain'}else if(m.kind=='rain'){d.className='tipc';d.textContent=m.text}else{const b=document.createElement('b');d.className='cmsg';if(/^(BRONZE|SILVER|GOLD|DIAMOND)$/.test(m.rk||'')){const q=document.createElement('span');q.className='bd '+m.rk;q.textContent=m.rk;d.append(q)}b.textContent=m.name+': ';d.append(b,document.createTextNode(m.text))}el.append(d)}
+async function livePoll(){try{const r=await api('/api/live?since='+lastId);if(r.error)return;const el=$('cm');let fresh=false;r.msgs.forEach(m=>{addMsg(m);lastId=Math.max(lastId,m.id);if(!firstPoll&&m.kind!='tip')fresh=true});firstPoll=false;while(el.children.length>80)el.firstChild.remove();if(r.msgs.length){el.scrollTop=1e9;if(fresh)SFX.ping()}
+ const l=r.rain.left;$('rpot').textContent=fmt(r.rain.pot);$('rinfo').textContent=`${Math.floor(l/60000)}:${String(Math.floor(l/1000)%60).padStart(2,'0')} · ${r.rain.n} joined`;$('rfill').style.width=((1-l/(r.rain.len||120000))*100)+'%';$('rj').disabled=r.rain.me;$('cst').textContent='👥 '+r.online+' online';
+ if(!$('go').disabled||$('game').hidden){if(r.bal>bal)SFX.coins();bal=r.bal;draw()}}catch(e){}}
+function startLive(){if(liveOn)return;liveOn=true;$('nm').hidden=true;livePoll();setInterval(livePoll,2000)}
+{const s0=send,t0=tip,j0=joinRain;
+ send=async function(){if(!SRV)return s0();const t=$('ci').value.trim();if(!t)return;$('ci').value='';const r=await api('/api/chat',{text:t});if(r.error)$('cst').textContent=r.error;else livePoll()};
+ tip=async function(){if(!SRV)return t0();const r=await api('/api/rain/tip',{amount:parse($('ra').value)});if(r.error)return alert(r.error);bal=r.bal;draw();SFX.coins();livePoll()};
+ joinRain=async function(){if(!SRV)return j0();const r=await api('/api/rain/join',{});if(r.error)return alert(r.error);SFX.coins();livePoll()}}
 const PL={};function grid(){$('gg').innerHTML=Object.entries(G).map(([k,o],i)=>{PL[k]=PL[k]||Math.floor(4+Math.random()*80);return `<div class="card gc" style="--h:${(i*47+300)%360}" onclick="show('${k}')"><div class="ic">${o.i}</div><b>${o.n}</b><small><span class="dot"></span>${PL[k]} playing</small></div>`}).join('')}
 function show(g){document.body.classList.toggle('side',g!=='title');$('title').hidden=g!=='title';document.querySelector('header').hidden=g==='title';$('fab').hidden=g==='title';if(g==='title')$('cp').hidden=true;else if(matchMedia('(min-width:1000px)').matches)$('cp').hidden=false;$('home').hidden=g!=='home';$('prof').hidden=g!=='prof';$('game').hidden=['home','title','prof'].includes(g);{const v=$(['home','prof','title'].includes(g)?g:'game');v.classList.remove('vin');void v.offsetWidth;v.classList.add('vin')}if(['home','title','prof'].includes(g)){scrollTo(0,0);if(g==='prof')profRender();return}mode=g;const o=G[g];$('gt').textContent=o.i+' '+o.n;$('xt').innerHTML='';$('ctl').innerHTML=o.c();hsr();$('vis').innerHTML=o.i;$('res').textContent=o.d;$('go').disabled=false;scrollTo(0,0)}
 function mul(x){const v=parse($('bet').value);if(v)$('bet').value=fmt(v*x)}
 async function play(){const b=G[mode].stake?G[mode].stake():parse($('bet').value);if(!b||b<1e5)return alert('Minimum bet is 100k.');if(b>2.5e9)return alert('Maximum bet is 2.5b.');if(b>bal)return alert('Not enough balance. Make a deposit first.');
-  const e=G[mode].ok&&G[mode].ok();if(e)return alert(e);$('go').disabled=true;SFX.bet();let SX=null;if(SRV){if(!G[mode].srv){$('go').disabled=false;return alert('The server supports Coinflip, Roulette, Crash, Cases and Jackpot. Other games are demo-only.')}SX=await api('/api/play',{game:mode,bet:b,opts:G[mode].opts?G[mode].opts():{}});if(SX.error){$('go').disabled=false;return alert(SX.error)}FQ=SX.floats.slice()}else{bal-=b;draw()}let o;try{o=await G[mode].r()}finally{FQ=null}if(SX)o.m=SX.m;const win=SX?SX.win:Math.floor(b*o.m),net=win-b;if(SX)bal=SX.bal;else bal+=win;draw();fx(net,o.m,o.quiet);{const pl=o.pill||`<span class="hp ${o.m>=1?'w':''}">${o.m.toFixed(2)}×</span>`;HS[mode]=(HS[mode]||[]).concat(pl).slice(-14);hsr()}
+  const e=G[mode].ok&&G[mode].ok();if(e)return alert(e);$('go').disabled=true;SFX.bet();let SX=null;if(SRV&&G[mode].own){}else if(SRV){if(!G[mode].srv){$('go').disabled=false;return alert('The server supports Coinflip, Roulette, Crash, Cases and Jackpot. Other games are demo-only.')}SX=await api('/api/play',{game:mode,bet:b,opts:G[mode].opts?G[mode].opts():{}});if(SX.error){$('go').disabled=false;return alert(SX.error)}FQ=SX.floats.slice()}else{bal-=b;draw()}let o;try{o=await G[mode].r()}finally{FQ=null}if(o.err){alert(o.err);$('go').disabled=false;return}if(SX)o.m=SX.m;const win=o.sw!==undefined?o.sw:SX?SX.win:Math.floor(b*o.m),net=win-b;if(o.sbal!==undefined)bal=o.sbal;else if(SX)bal=SX.bal;else bal+=win;draw();fx(net,o.m,o.quiet);{const pl=o.pill||`<span class="hp ${o.m>=1?'w':''}">${o.m.toFixed(2)}×</span>`;HS[mode]=(HS[mode]||[]).concat(pl).slice(-14);hsr()}
   if(o.v!==undefined)$('vis').innerHTML=o.v;$('res').innerHTML=o.t+' · '+`<b class="${net>=0?'win':'lose'}">${net>=0?'+':'−'}${Math.abs(net).toLocaleString()}</b>`;
   pnl.push((pnl[pnl.length-1]||0)+net);BH.unshift({g:G[mode].n,bet:b,net});BH.length=Math.min(BH.length,40);feed('You',G[mode].n,net,o.m);wag+=b;if(net>0)wins++;best=Math.max(best,net);
   log(G[mode].n+' · bet '+fmt(b),(net>=0?'+':'−')+fmt(Math.abs(net)),net>=0?'win':'lose');$('go').disabled=false}
