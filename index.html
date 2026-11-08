@@ -133,25 +133,53 @@ button,.card,.chip,.nb{transition:transform .15s,box-shadow .15s,filter .15s}but
 .rc i{width:26px;height:26px;border-radius:50%;bottom:50%;right:50%;transform:translate(50%,50%);border:3px dashed rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff;box-shadow:0 2px 0 rgba(0,0,0,.5);pointer-events:none;padding:0}
 .rres{display:inline-flex;align-items:center;gap:10px;margin-top:8px;padding:6px 14px;border-radius:12px;background:var(--panel2);font-size:15px;font-weight:700}.rres .nb{padding:3px 10px;font-size:20px}
 .rdist{font-size:12px;color:var(--mute);margin-top:6px}
+
+/* UI3 lobby */
+header{flex-wrap:wrap;background:rgba(18,13,8,.92);backdrop-filter:blur(10px);border-bottom:1px solid #3a2a12}
+.logo{display:flex;align-items:center;gap:8px;color:#ffd77a;text-shadow:0 0 18px rgba(255,160,40,.45)}
+#nv{flex-basis:100%;display:flex;gap:6px;overflow-x:auto;padding:2px 0 0;scrollbar-width:none;order:9}#nv::-webkit-scrollbar{display:none}
+.pill{background:transparent;color:#c9bda8;border:1px solid transparent;border-radius:10px;padding:8px 14px;font-weight:700;white-space:nowrap;display:flex;gap:6px;align-items:center}
+.pill:hover:not(:disabled){background:#2a2012;color:#fff}.pill.on{background:linear-gradient(180deg,#ffc93c,#ff8a1a);color:#2a1500;box-shadow:0 0 18px rgba(255,160,40,.45)}
+.vh{position:relative;display:grid;grid-template-columns:1.2fr .8fr;gap:10px;align-items:center;border:1px solid #4a3515;border-radius:22px;padding:34px 38px;margin-bottom:26px;overflow:hidden;background:radial-gradient(circle at 80% 40%,rgba(255,170,40,.28),transparent 55%),linear-gradient(160deg,#1b1409,#0e0b07)}
+.vh .bd{display:inline-block;border:1px solid #4a3515;border-radius:999px;padding:4px 12px;font-size:12px;color:#ddd;margin-bottom:14px;background:rgba(0,0,0,.35)}
+.vh h1{margin:0 0 12px;font-size:clamp(30px,5.2vw,54px);line-height:1.04;font-weight:900;letter-spacing:-1px}.vh h1 em{font-style:normal;background:linear-gradient(90deg,#ffe28a,#ffb53a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.vh p{color:#c3b8a6;max-width:520px;margin:0 0 18px}.vh .cta{font-size:17px;padding:14px 26px;border-radius:12px;box-shadow:0 0 26px rgba(255,160,40,.5);animation:pl 2s ease-in-out infinite}
+.vh .dn3d{width:300px;height:300px;filter:drop-shadow(0 0 40px rgba(255,170,40,.65)) drop-shadow(0 20px 30px rgba(255,122,26,.35))}
+.sec{display:flex;align-items:center;justify-content:space-between;margin:26px 0 12px}.sec h2{margin:0;font-size:22px}.sec a{color:#ffc93c;font-size:13px;cursor:pointer;text-decoration:none}
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.ac{position:relative;height:250px;border-radius:16px;overflow:hidden;cursor:pointer;border:1px solid hsl(var(--h) 55% 30%);background:radial-gradient(circle at 50% 36%,hsl(var(--h) 80% 38%),hsl(var(--h) 60% 12%) 70%),#0b0b0d;transition:transform .2s,box-shadow .2s;isolation:isolate}
+.fg .ac{height:300px}.ac:hover{transform:translateY(-5px);box-shadow:0 0 28px hsl(var(--h) 90% 50%/.45)}
+.ac::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0 10px,transparent 10px 20px);z-index:-1}
+.ac .big3{position:absolute;left:0;right:0;top:16%;text-align:center;font-size:86px;filter:drop-shadow(0 10px 16px rgba(0,0,0,.6)) drop-shadow(0 0 22px hsl(var(--h) 90% 55%/.7));animation:flo 4s ease-in-out infinite;transition:transform .25s}.fg .ac .big3{font-size:104px}
+.ac:hover .big3{transform:scale(1.14) rotate(-5deg)}
+.ac .dc{position:absolute;font-size:22px;opacity:.7;animation:flo 3s ease-in-out infinite}
+.ac .lab{position:absolute;left:0;right:0;bottom:0;padding:34px 12px 12px;background:linear-gradient(transparent,rgba(0,0,0,.88))}
+.ac .lab b{display:block;font-size:17px}.ac .lab small{color:#bbb;font-size:12px}
+.ac .lv{position:absolute;right:10px;top:10px;background:rgba(10,40,25,.85);border:1px solid #1f7a4d;color:#6ff0b0;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:700}
+.hot{position:absolute;left:10px;top:10px;background:rgba(120,15,25,.85);border:1px solid #c33;color:#ff8a8a;border-radius:999px;padding:2px 10px;font-size:11px;font-weight:800}
+#gsec,#tp,#fair{scroll-margin-top:130px}.vol{display:flex;align-items:center;gap:6px;background:#241a0c;border:1px solid #3a2a12;border-radius:999px;padding:4px 10px}.vol input{width:70px;accent-color:#ffb53a}
+body.pt #app{opacity:0;transform:translateY(10px)}main{transition:opacity .18s,transform .18s}
+@media(max-width:760px){.vh{grid-template-columns:1fr;padding:22px;text-align:center}.vh .dn3d{width:200px;height:200px}.vh p{margin-inline:auto}.vol{display:none}.fg .ac{height:240px}}
 </style>
 </head>
 <body><div id="boot"><div class="dn3d sm"></div><b>DONUTRUSH</b><div class="bar"><i></i></div></div><div id="toasts"></div><canvas id="bgc"></canvas>
 <header hidden>
-  <span class="logo" onclick="show('title')">🍩 DONUTRUSH</span><span class="tag">DEMO</span>
+  <span class="logo" onclick="show('home')"><span style="font-size:26px">🍩</span>DONUTRUSH</span><span class="tag">DEMO</span>
   <span class="sp"></span>
   <span class="bal" id="onl" hidden>🟢 0 online</span><span class="bal" id="bal">0</span>
-  <button class="ghost" id="mt" onclick="toggleMute()">🔊</button><button class="ghost" id="ob" hidden onclick="bal+=1e9;draw()">👑 +1b</button><button class="ghost" onclick="stats()">📈 Stats</button><button class="gold" id="fc" onclick="claim()">🎁 Free coins</button><button class="gold" id="bdep" hidden onclick="openMoney('dep')">💰 Deposit</button><button class="ghost" id="bwd" hidden onclick="openMoney('wd')">🏧 Withdraw</button><button class="ghost" onclick="show('prof')">👤 Profile</button>
-  
+  <span class="vol" title="Music"><button class="ghost" id="mb" style="padding:2px 8px" onclick="toggleMusic()">🎵</button><input type="range" id="mvol" min="0" max="100" value="60" oninput="setMV(this.value)"></span><button class="ghost" id="mt" onclick="toggleMute()">🔊</button><button class="ghost" id="ob" hidden onclick="bal+=1e9;draw()">👑 +1b</button><button class="ghost" onclick="stats()">📈 Stats</button><button class="gold" id="fc" onclick="claim()">🎁 Free coins</button><button class="gold" id="bdep" hidden onclick="openMoney('dep')">💰 Deposit</button><button class="ghost" id="bwd" hidden onclick="openMoney('wd')">🏧 Withdraw</button>  <nav id="nv"><button class="pill on" data-n="home" onclick="nav('home')">🏠 Lobby</button><button class="pill" data-n="games" onclick="nav('games')">🎮 Games</button><button class="pill" data-n="top" onclick="nav('top')">🏆 Top</button><button class="pill" data-n="tip" onclick="nav('tip')">🌧️ Rain &amp; Chat</button><button class="pill" data-n="stats" onclick="nav('stats')">📈 Stats</button><button class="pill" data-n="fair" onclick="nav('fair')">🔒 Fairness</button><button class="pill" data-n="prof" onclick="nav('prof')">👤 Profile</button></nav>
 </header>
 <main>
-<section id="title" class="ttl"><div id="fl"></div><div class="tin"><div class="dn3d"></div><div class="tg">UNOFFICIAL FAN PROJECT · 18+ ONLY</div><h1>DONUTRUSH</h1><p>Provably fair mini-games, jackpots and Minecraft cases. Not affiliated with DonutSMP or Mojang.</p><button class="gold big2" onclick="SFX.start();show('home')">ENTER THE ARCADE →</button>
+<section id="title" class="ttl"><div id="fl"></div><div class="tin"><div class="dn3d"></div><div class="tg">UNOFFICIAL FAN PROJECT · 18+ ONLY</div><h1>DONUTRUSH</h1><p>Provably fair mini-games, jackpots and Minecraft cases. Not affiliated with DonutSMP or Mojang.</p><button class="gold big2" onclick="SFX.start();musicAuto();show('home')">ENTER THE ARCADE →</button>
 <div class="feat"><div>⚡<b>Instant</b><small>Play in one click</small></div><div>🔒<b>Provably fair</b><small>Verify every bet</small></div><div>🌧️<b>Live rain</b><small>Chat and win together</small></div><div>💰<b>Deposit &amp; withdraw</b><small>DonutSMP money</small></div></div></div></section>
 <section id="home" hidden>
-  <div class="hero"><div class="dn3d hero-dn"></div><h1>DonutSMP games, <span style="color:var(--gold)">provably fair</span>.</h1>
-  <p>Deposit DonutSMP money, play 20+ provably fair games, withdraw anytime. Unofficial fan project, 18+ only.</p>
-  <div class="jp">🏆 PROGRESSIVE JACKPOT <b id="jpc">0</b><small>(simulated)</small></div><br><button class="gold" onclick="show('coinflip')">Play Coinflip</button> <button class="ghost" onclick="show('jackpot')">Join Jackpot</button></div>
-  <h2>Games</h2>
-  <div class="grid" id="gg"></div>
+  <div class="vh"><div><span class="bd">🍩 DonutSMP · in-game coins · unofficial fan project</span><h1>Gamble your <em>Donut coins</em> in the smoothest casino on the SMP.</h1>
+  <p>Sign in with your email, deposit with /pay, play 20+ provably fair games, tip the rain and watch real bets roll in live. 18+ only.</p>
+  <div class="jp">🏆 BIGGEST WIN <b id="jpc">0</b></div><br><button class="gold cta" onclick="show('roulette')">🎡 Play Roulette</button> <button class="ghost" onclick="nav('top')">🏆 Leaderboard</button></div>
+  <div><div class="dn3d hero-dn"></div></div></div>
+  <div class="sec"><h2>🔥 Featured games</h2></div><div class="fg" id="fg"></div>
+  <div class="sec" id="gsec"><h2>🎮 All games</h2><a onclick="scrollTo({top:0,behavior:'smooth'})">↑ top</a></div><div class="ag" id="gg"></div>
   <h2>🏆 Top players <small class="mono">live</small></h2><div class="panel" id="tp"><small class="mono">Sign in to see the live leaderboard.</small></div><h2>📡 Live activity <small class="mono">simulated players</small></h2><div class="panel" id="lf"></div><h2>Your recent bets</h2><div class="panel" id="hist"><small class="mono">Nothing yet. Place a bet or make a deposit.</small></div>
   <h2 id="fair">Fairness</h2>
   <div class="panel">
@@ -167,7 +195,7 @@ button,.card,.chip,.nb{transition:transform .15s,box-shadow .15s,filter .15s}but
 <div class="panel"><div class="row"><div style="font-size:54px">⛏️</div><div><b id="pn" style="font-size:20px"></b><div class="mono" id="pr"></div></div><span class="sp"></span><div class="bal" id="pb"></div></div></div>
 <h2>📊 Statistics</h2><div class="panel" id="ps"></div><h2>🏆 Leaderboard</h2><div class="panel" id="plb"></div><h2>🧾 Bet history</h2><div class="panel" id="ph"></div>
 <h2>⚙️ Settings</h2><div class="panel"><label>Master volume <b id="vl">70%</b></label><input type="range" id="vol" min="0" max="100" value="70" style="width:100%" oninput="setVol(this.value)">
-<div class="row" style="margin:10px 0"><button class="ghost" id="mt2" onclick="toggleMute()">🔊 Sound on</button><button class="ghost" id="mu" onclick="toggleMusic()">🎵 Music off</button></div>
+<div class="row" style="margin:10px 0"><button class="ghost" id="mt2" onclick="toggleMute()">🔊 Sound on</button><button class="ghost" id="mu" onclick="toggleMusic()">🎵 Music off</button></div><label>Music volume</label><input type="range" min="0" max="100" value="60" style="width:100%" oninput="setMV(this.value)">
 <label>Display name</label><input type="text" id="sn" maxlength="16" oninput="myName=this.value.slice(0,16)||myName;$('nm').value=myName"><div class="row" style="margin-top:10px"><button class="ghost" id="lo" onclick="logout()" hidden>Log out</button></div></div></section>
 <section id="game" hidden>
   <button class="ghost" onclick="show('home')">← All games</button>
@@ -365,8 +393,13 @@ let CRH=[],lastFeed=0,BH=[],SRV=false,FQ=null,CB=[],claimAt=0,VOL=.7,master=null
 const BOTS=['CreeperKing','AlexMiner','NetherNick','EnderQueen','DiamondDan','PixelPete','GoldenGolem','RedstoneRay','ObsidianOli','BlazeBella','SteveSMP','WitherWill'];
 const mst=()=>{const a=ac();if(!a)return null;if(!master){master=a.createGain();master.gain.value=VOL;master.connect(a.destination)}return master};
 function setVol(v){VOL=v/100;if(master)master.gain.value=VOL;$('vl').textContent=v+'%'}
-function toggleMusic(){if(MUS){clearInterval(MUS);MUS=null;$('mu').textContent='🎵 Music off';return}if(!ac())return;$('mu').textContent='🎶 Music on';const N=[110,130.8,146.8,164.8,196,220,261.6,293.7],P=[0,2,4,6,4,2,5,3];let i=0;
- MUS=setInterval(()=>{if(MUTE)return;const fq=N[P[i%8]];tone(fq,1.3,'sine',.05);if(i%2==0)tone(fq*2,.5,'triangle',.025,.1);if(i%8==0)tone(fq/2,2.4,'sine',.06);if(i%4==3)tone(fq*3,.3,'sine',.02,.2);i++},480)}
+let MV=.6;try{const q=localStorage.getItem('dr_mv');if(q!==null)MV=+q}catch(e){}
+function musUI(){const on=!!MUS;if($('mb'))$('mb').textContent=on?'🎶':'🎵';if($('mu'))$('mu').textContent=on?'🎶 Music on':'🎵 Music off'}
+function setMV(v){MV=v/100;try{localStorage.setItem('dr_mv',MV)}catch(e){}if($('mvol'))$('mvol').value=v}
+function musicAuto(){let off=false;try{off=localStorage.getItem('dr_music')==='off'}catch(e){}if(!off&&!MUS)toggleMusic(true)}
+function toggleMusic(auto){if(MUS){clearInterval(MUS);MUS=null;if(!auto===false){}try{localStorage.setItem('dr_music','off')}catch(e){}musUI();return}if(!ac())return;try{localStorage.setItem('dr_music','on')}catch(e){}
+ const C=[[220,261.6,329.6],[174.6,220,261.6],[130.8,164.8,196],[196,246.9,293.7]];let i=0;
+ MUS=setInterval(()=>{if(MUTE||!MV)return;const ch=C[Math.floor(i/8)%4],v=MV*.1;if(i%8==0){ch.forEach(f=>tone(f,4.2,'sine',v*.55));tone(ch[0]/2,4.2,'triangle',v*.9)}tone(ch[i%3]*2,.9,'triangle',v*.5);if(i%4==2)tone(ch[(i+1)%3]*4,.5,'sine',v*.25,.15);i++},500);musUI()}
 SFX.cd=()=>tone(660,.12,'sine',.12);SFX.rare=()=>{[659,880,1175].forEach((f,i)=>tone(f,.35,'triangle',.11,i*.09));for(let i=0;i<6;i++)tone(2400+Math.random()*1800,.06,'sine',.03,.25+i*.05)};
 SFX.legend=()=>{tone(180,1.1,'sawtooth',.07,0,1700);noise(1.2,.2,300,0,'bandpass',5000);[523,659,784,1047,1319,1568,2093].forEach((f,i)=>{tone(f,.7,'triangle',.13,1+i*.09);tone(f*2,.5,'sine',.04,1+i*.09)});for(let i=0;i<18;i++)tone(2000+Math.random()*3000,.07,'sine',.03,1.3+i*.05);setTimeout(()=>{noise(.6,.3,900,0,'lowpass',60)},950)};
 const RC={common:'#9ca3af',uncommon:'#4ade80',rare:'#3b82f6',epic:'#a855f7',legendary:'#ffb300'};
@@ -388,7 +421,7 @@ async function profRender(){$('pn').textContent=myName;$('pr').textContent='Rank
  $('ph').innerHTML=BH.length?BH.map(h=>`<div class="tx"><span>${h.g} · bet ${fmt(h.bet)}</span><b class="${h.net>=0?'win':'lose'}">${h.net>=0?'+':'−'}${fmt(Math.abs(h.net))}</b></div>`).join(''):'<small class="mono">No bets yet.</small>';
  let L;if(SRV){try{L=await api('/api/leaderboard')}catch(e){L=[]}}else{L=BOTS.slice(0,7).map((u,i)=>({user:u,profit:(7-i)*37e6+i*1.3e6}));L.push({user:myName+' (you)',profit:t});L.sort((a,b)=>b.profit-a.profit);}
  $('plb').innerHTML=(SRV?'':'<small class="mono">Demo leaderboard: rivals are simulated. Host the server for a real one.</small>')+L.map((p,i)=>`<div class="tx"><span>${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${p.user}</span><b class="${p.profit>=0?'win':'lose'}">${p.profit>=0?'+':'−'}${fmt(Math.abs(p.profit))}</b></div>`).join('')}
-(()=>{const c=$('bgc'),x=c.getContext('2d');let W,H;const rs=()=>{W=c.width=innerWidth;H=c.height=innerHeight};rs();addEventListener('resize',rs);const E=['🪙','💎','🟩','⭐','🟧'],P=Array.from({length:34},()=>({x:Math.random()*W,y:Math.random()*H,s:10+Math.random()*18,v:.15+Math.random()*.5,e:E[Math.floor(Math.random()*5)],a:.08+Math.random()*.2,r:Math.random()*6}));
+(()=>{const c=$('bgc'),x=c.getContext('2d');let W,H;const rs=()=>{W=c.width=innerWidth;H=c.height=innerHeight};rs();addEventListener('resize',rs);const E=['🍩','🍩','🍩','🍩','🪙','💎','⭐','🟧'],P=Array.from({length:46},()=>({x:Math.random()*W,y:Math.random()*H,s:10+Math.random()*18,v:.15+Math.random()*.5,e:E[Math.floor(Math.random()*8)],a:.08+Math.random()*.2,r:Math.random()*6}));
  (function t(){x.clearRect(0,0,W,H);for(const p of P){p.y-=p.v;p.r+=.004;p.x+=Math.sin(p.r*2)*.3;if(p.y<-30){p.y=H+30;p.x=Math.random()*W}x.globalAlpha=p.a;x.font=p.s+'px serif';x.fillText(p.e,p.x,p.y)}x.globalAlpha=1;requestAnimationFrame(t)})()})();
 function jp(f,bet){const n=3+Math.floor(f(1)*3),P=[{name:'You',amt:bet}];for(let i=0;i<n;i++)P.push({name:BOTS[(Math.floor(f(2+i*2)*BOTS.length)+i)%BOTS.length],amt:Math.max(1000,Math.floor(bet*(.3+f(3+i*2)*2.5)/1000)*1000)});const tot=P.reduce((a,p)=>a+p.amt,0);let q=f(0)*tot,w=0;for(;w<P.length-1&&q>=P[w].amt;w++)q-=P[w].amt;return{P,tot,w}}
 const CI={starter:{t:[[.35,.2,'🪨','Cobblestone','common'],[.3,.5,'⚙️','Iron Ingot','common'],[.2,1,'🪙','Gold Ingot','uncommon'],[.1,2,'🟩','Emerald','rare'],[.04,5,'💎','Diamond','epic'],[.01,17,'👑','Netherite Crown','legendary']]},
@@ -461,7 +494,7 @@ async function livePoll(){try{const r=await api('/api/live?since='+lastId+'&fs='
  const l=r.rain.left;$('rpot').textContent=fmt(r.rain.pot);$('rinfo').textContent=`${Math.floor(l/60000)}:${String(Math.floor(l/1000)%60).padStart(2,'0')} · ${r.rain.n} joined`;$('rfill').style.width=((1-l/(r.rain.len||120000))*100)+'%';$('rj').disabled=r.rain.me;$('cst').textContent='👥 '+r.online+' online';
  if(!$('go').disabled||$('game').hidden){if(r.bal>bal)SFX.coins();bal=r.bal;draw()}}catch(e){}}
 function liveReal(r){if(r.online!==undefined){const o=$('onl');o.hidden=false;o.textContent='🟢 '+r.online+' online'}if(lbN++%8==0)topLB();const el=$('lf');if(r.feed&&el){r.feed.forEach(f=>{lastFeed=Math.max(lastFeed,f.id);if(feedReady&&f.win>=1e6)toast(f.name+' won '+fmt(f.win)+' on '+String(f.g),'🎉');const d=document.createElement('div'),a=document.createElement('span'),b=document.createElement('b');d.className='tx';a.textContent='🟢 '+f.name+' won '+fmt(f.win)+' on '+String(f.g);b.className='win';b.textContent=(+f.m).toFixed(2)+'×';d.append(a,b);el.prepend(d);const w=el.querySelector('.none');if(w)w.remove();while(el.children.length>8)el.lastChild.remove()})}
- if(r.stat){const e=$('jpc');if(e)e.textContent=fmt(r.stat.big)+(r.stat.bigWho?' · '+r.stat.bigWho:'')}if(r.crash)CRH=r.crash.map(Number);feedReady=true;if(r.playing)document.querySelectorAll('#gg .card').forEach(c=>{const m=/show\('(\w+)'\)/.exec(c.getAttribute('onclick')||''),s=c.querySelector('small');if(m&&s)s.innerHTML='<span class="dot"></span>'+(r.playing[m[1]]||0)+' playing'})}
+ if(r.stat){const e=$('jpc');if(e)e.textContent=fmt(r.stat.big)+(r.stat.bigWho?' · '+r.stat.bigWho:'')}if(r.crash)CRH=r.crash.map(Number);feedReady=true;if(r.playing)document.querySelectorAll('.ac').forEach(c=>{const m=/show\('(\w+)'\)/.exec(c.getAttribute('onclick')||''),n=c.querySelector('.pn');if(m&&n)n.textContent=(r.playing[m[1]]||0)})}
 function startLive(){if(liveOn)return;liveOn=true;{const j=document.querySelector('.jp');if(j)j.innerHTML='🏆 BIGGEST WIN EVER <b id="jpc">…</b><small>(real players)</small>';const h=document.querySelector('#lf').previousElementSibling;if(h)h.innerHTML='📡 Live activity <small class="mono">real wins of 200k+</small>';$('lf').innerHTML='<small class="mono none">Waiting for the next big win…</small>'}$('nm').hidden=true;livePoll();setInterval(livePoll,2000)}
 {const s0=send,t0=tip,j0=joinRain;
  send=async function(){if(!SRV)return s0();const t=$('ci').value.trim();if(!t)return;$('ci').value='';const r=await api('/api/chat',{text:t});if(r.error)$('cst').textContent=r.error;else livePoll()};
@@ -510,7 +543,11 @@ G.roulette={n:'Roulette',i:'🎡',d:'European wheel · tap the table to stack ch
   const wc=$('wc2');if(wc)wc.textContent=n;const rc=$('rc_n'+n);if(rc)rc.classList.add('win');rlast=mine;rall.push(n);rhud();
   let ret=0;for(const k in mine){const a=mine[k];ret+=a*(k=='n'+n?36:k=='red'?(col(n)=='r'?2:0):k=='black'?(col(n)=='k'?2:0):k=='even'?(n>0&&n%2==0?2:0):k=='odd'?(n%2==1?2:0):k=='low'?(n>=1&&n<=18?2:0):k=='high'?(n>=19?2:0):k[0]=='d'?(n>0&&Math.ceil(n/12)==+k[1]?3:0):k[0]=='c'?(n>0&&(n%3||3)==+k[1]?3:0):0)}
   return{m:ret/stake,t:`<span class="rres"><span class="nb ${col(n)}">${n}</span>${{r:'Red',k:'Black',g:'Green'}[col(n)]}</span>`,pill:`<span class="hp ${col(n)}">${n}</span>`}}};
-const PL={};function grid(){$('gg').innerHTML=Object.entries(G).map(([k,o],i)=>{PL[k]=PL[k]||Math.floor(4+Math.random()*80);return `<div class="card gc" style="--h:${(i*47+300)%360}" onclick="show('${k}')"><div class="ic">${o.i}</div><b>${o.n}</b><small><span class="dot"></span>${PL[k]} playing</small></div>`}).join('')}
+const PL={};const ART={coinflip:'🍩 ✨',dice:'✨ 🎯',limbo:'💫 ⭐',crash:'💰 🪙',roulette:'🪙 ✨',plinko:'⚪ 🟡',mines:'💎 🔥',towers:'⭐ 🧱',chicken:'🌾 🥚',lava:'🔥 💥',stripmine:'💎 ⛏️',rps:'✨ 🤜',pigrace:'🌾 🏁',upgrader:'✨ ⭐',cases:'💎 ✨',stocks:'💰 📊',draw:'♠️ ♥️',double:'✨ 💰',keno:'🎱 ✨',jackpot:'💰 🪙',blackjack:'♠️ ♦️'};
+const TAG={coinflip:'Heads or tails · 1.98×',dice:'Roll over or under',limbo:'Pick a multiplier',crash:'Cash out before it busts',roulette:'Red, black or green',plinko:'Drop and bounce',mines:'Find gems, dodge bombs',towers:'Climb for bigger payouts',chicken:'Cross the road',lava:'Hop over the lava',stripmine:'Dig deep, cash out',rps:'Beat the house',pigrace:'Back your pig',upgrader:'Upgrade your bet',cases:'Open Minecraft cases',stocks:'Call the market',draw:'Draw your hand',double:'Double or nothing',keno:'Pick your numbers',jackpot:'Winner takes the pot',blackjack:'Beat the dealer to 21'};
+const HOTG=['crash','mines','roulette','blackjack'];
+function acard(k,i){const o=G[k],d=(ART[k]||'✨ 🍩').split(' ');PL[k]=PL[k]||0;return `<div class="ac gc" style="--h:${[28,265,350,140,200,320,45,180][i%8]}" onclick="SFX.click();show('${k}')">${HOTG.includes(k)?'<span class="hot">🔥 HOT</span>':''}<span class="dc" style="left:12%;top:58%">${d[0]}</span><span class="dc" style="right:12%;top:22%;animation-delay:-1s">${d[1]}</span><div class="big3">${o.i}</div><div class="lab"><b>${o.n}</b><small>${TAG[k]||''}</small></div><span class="lv"><span class="dot"></span><span class="pn">${PL[k]}</span></span></div>`}
+function grid(){const ks=Object.keys(G);$('fg').innerHTML=['crash','roulette','blackjack','mines'].filter(k=>G[k]).map(acard).join('');$('gg').innerHTML=ks.map(acard).join('')}
 function show(g){document.body.classList.toggle('side',g!=='title');$('title').hidden=g!=='title';document.querySelector('header').hidden=g==='title';$('fab').hidden=g==='title';if(g==='title')$('cp').hidden=true;else if(matchMedia('(min-width:1000px)').matches)$('cp').hidden=false;$('home').hidden=g!=='home';$('prof').hidden=g!=='prof';$('game').hidden=['home','title','prof'].includes(g);{const v=$(['home','prof','title'].includes(g)?g:'game');v.classList.remove('vin');void v.offsetWidth;v.classList.add('vin')}if(['home','title','prof'].includes(g)){scrollTo(0,0);if(g==='prof')profRender();return}mode=g;const o=G[g];$('gt').textContent=o.i+' '+o.n;$('xt').innerHTML='';$('ctl').innerHTML=o.c();hsr();$('vis').innerHTML=o.i;$('res').textContent=o.d;$('go').disabled=false;scrollTo(0,0)}
 function mul(x){const v=parse($('bet').value);if(v)$('bet').value=fmt(v*x)}
 async function play(){const b=G[mode].stake?G[mode].stake():parse($('bet').value);if(!b||b<1e5)return alert('Minimum bet is 100k.');if(b>2.5e9)return alert('Maximum bet is 2.5b.');if(b>bal)return alert('Not enough balance. Make a deposit first.');
@@ -527,6 +564,14 @@ function withdraw(){const a=parse($('wa').value);if(!a||a>bal)return alert('Inva
 async function seedUI(){$('sh').textContent=await sha(serverSeed)}
 async function rotate(){const old=serverSeed;$('rev').textContent='Previous server seed: '+old+' (hash '+(await sha(old)).slice(0,16)+'…, '+nonce+' bets)';serverSeed=rnd(32);nonce=0;seedUI()}
 $('cs').value=rnd(8);grid();seedUI();draw();
+
+SFX.whoosh=()=>noise(.28,.1,700,0,'bandpass',2600);
+function pillOn(n){document.querySelectorAll('#nv .pill').forEach(p=>p.classList.toggle('on',p.dataset.n===n))}
+function goSec(id){setTimeout(()=>{const e=$(id);if(e)e.scrollIntoView({behavior:'smooth',block:'start'})},60)}
+function nav(n){SFX.click();if(n==='prof'){show('prof');return}if(n==='stats'){stats();return}if(n==='tip'){$('cp').hidden=!$('cp').hidden;if(!$('cp').hidden&&innerWidth<1000)$('cp').scrollIntoView({block:'end'});return}
+ if($('home').hidden)show('home');if(n==='home'){scrollTo({top:0,behavior:'smooth'});pillOn('home');return}pillOn(n);goSec({games:'gsec',top:'tp',fair:'fair'}[n])}
+{const _s=show;show=function(g){const prev=document.body.dataset.v;_s(g);document.body.dataset.v=g;if(prev!==g&&g!=='title')SFX.whoosh();pillOn(g==='prof'?'prof':g==='home'?'home':'');const nv=$('nv');if(nv)nv.hidden=false}}
+document.addEventListener('click',e=>{const b=e.target.closest('header button:not(.pill):not(#mb)');if(b)SFX.click()});
 </script>
 </body>
 </html>
