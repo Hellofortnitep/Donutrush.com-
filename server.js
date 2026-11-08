@@ -9,7 +9,7 @@ const secret=process.env.SESSION_SECRET||(fs.existsSync(SECRET_FILE)?fs.readFile
 let db={users:{},txs:{}};try{db=JSON.parse(fs.readFileSync(DB_FILE,'utf8'))}catch{}db.txs=db.txs||{};
 let dirty=false;const save=()=>{dirty=true},flush=()=>{if(dirty){dirty=false;fs.writeFileSync(DB_FILE+'.tmp',JSON.stringify(db));fs.renameSync(DB_FILE+'.tmp',DB_FILE)}};
 setInterval(flush,1000).unref();
-const RL=+(process.env.RAIN_MS||120000),RAIN_MIN_WAG=+(process.env.RAIN_MIN_WAG||1e6);db.chat=db.chat||[];db.chatId=db.chatId||0;db.rain=db.rain||{pot:0,join:[],ends:Date.now()+RL};for(const s of['SIGINT','SIGTERM'])process.on(s,()=>{flush();process.exit(0)});
+const RL=+(process.env.RAIN_MS||120000),RAIN_MIN_WAG=+(process.env.RAIN_MIN_WAG||1e6);db.feed=db.feed||[];db.feedId=db.feedId||0;db.crash=db.crash||[];db.stat=db.stat||{wag:0,bets:0,big:0,bigWho:'',bigGame:''};db.chat=db.chat||[];db.chatId=db.chatId||0;db.rain=db.rain||{pot:0,join:[],ends:Date.now()+RL};for(const s of['SIGINT','SIGTERM'])process.on(s,()=>{flush();process.exit(0)});
 const mask=e=>e.split('@')[0].slice(0,2)+'***',EMAIL=/^[^\s@]{1,64}@[^\s@]+\.[^\s@]{2,}$/,IGN=/^[A-Za-z0-9_.]{3,16}$/,fmt=n=>n>=1e9?+(n/1e9).toFixed(2)+'b':n>=1e6?+(n/1e6).toFixed(2)+'m':n>=1e3?+(n/1e3).toFixed(2)+'k':''+n;
 const sha=s=>crypto.createHash('sha256').update(s).digest('hex'),hashPw=(p,salt)=>crypto.scryptSync(p,salt,64).toString('hex');
 const sign=u=>{const p=Buffer.from(JSON.stringify({u,v:(db.users[u]&&db.users[u].sv)||0,exp:Date.now()+7*864e5})).toString('base64url');return p+'.'+crypto.createHmac('sha256',secret).update(p).digest('base64url')};
@@ -52,7 +52,8 @@ Object.assign(GAMES,{
  keno:(f,o)=>{const A=Array.isArray(o.picks)?o.picks.map(Number):[],P=[...new Set(A)].filter(x=>Number.isInteger(x)&&x>=1&&x<=40);if(P.length<1||P.length>6||P.length!==A.length)throw Error('Pick 1 to 6 numbers');const a=[...Array(40).keys()].map(x=>x+1);let h=0;for(let i=0;i<10;i++){const j=i+Math.floor(f(i)*(40-i));[a[i],a[j]]=[a[j],a[i]];if(P.includes(a[i]))h++}return{m:kt(P.length)[h]||0}}});
 for(const g in ST)GAMES[g]=(f,o)=>{const s=ST[g],L=ci(o.steps,1,10,3),c=Math.floor(Math.log(f(0)||1e-9)/Math.log(s)),p=s**L;return{m:c>=L?.99/p:0}};
 // ---- blackjack + crash (multi-step, server keeps the state) ----
-const settle=(u,g,bet,win)=>{u.bal+=win;u.wag+=bet;u.profit+=win-bet;u.hist.unshift({g,bet,win,t:Date.now()});u.hist.length=Math.min(u.hist.length,50);u.nonce++;save()};
+const rec=(u,g,bet,win)=>{u.lg=g;u.lgt=Date.now();const S=db.stat,p=win-bet;S.wag+=bet;S.bets++;if(p>S.big){S.big=p;S.bigWho=mask(u.email);S.bigGame=g}if(p>=200000){db.feed.push({id:++db.feedId,name:mask(u.email),g,win:p,m:bet?win/bet:0,ts:Date.now()});if(db.feed.length>40)db.feed.splice(0,db.feed.length-40)}};
+const settle=(u,g,bet,win)=>{rec(u,g,bet,win);u.bal+=win;u.wag+=bet;u.profit+=win-bet;u.hist.unshift({g,bet,win,t:Date.now()});u.hist.length=Math.min(u.hist.length,50);u.nonce++;save()};
 const betOk=(u,bet)=>!Number.isInteger(bet)||bet<MIN||bet>MAX?'Bet must be 100k to 2.5b':bet>u.bal?'Not enough coins':null;
 const bvv=h=>{let t=0,a=0;for(const n of h){const r=n%13;t+=r==0?(a++,11):r>=9?10:r+1}while(t>21&&a>0){t-=10;a--}return t};
 const bjCard=(u,b)=>Math.floor(fl(u,100+b.i++,b.n)*52);
@@ -60,7 +61,7 @@ const bjView=(u,b,done,x)=>({p:b.p,d:done?b.d:[b.d[0]],pv:bvv(b.p),dv:done?bvv(b
 function bjEnd(u,b,m,msg){const win=Math.floor(b.bet*m);settle(u,'blackjack',b.bet,win);u.bj=null;return bjView(u,b,true,{m,win,msg})}
 function bjStand(u,b){while(bvv(b.d)<17)b.d.push(bjCard(u,b));const a=bvv(b.p),d=bvv(b.d);return bjEnd(u,b,d>21||a>d?2:a==d?1:0,d>21?'Dealer busts':a>d?'You win':a==d?'Push':'Dealer wins')}
 function crSettle(u,cash){const c=u.cr,m=Math.exp(.25*(Date.now()-c.t0)/1000),auto=c.auto>1?c.auto:Infinity,cp=Math.min(c.x,auto);
- if(m>=cp||cash){let win=0,fm=m;if(m>=cp){if(auto<=c.x){win=Math.floor(c.bet*auto);fm=auto}else fm=c.x}else win=Math.floor(c.bet*m);settle(u,'crash',c.bet,win);u.cr=null;return{done:true,m:fm,x:c.x,win,bal:u.bal}}
+ if(m>=cp||cash){let win=0,fm=m;if(m>=cp){if(auto<=c.x){win=Math.floor(c.bet*auto);fm=auto}else fm=c.x}else win=Math.floor(c.bet*m);settle(u,'crash',c.bet,win);db.crash.push(c.x);if(db.crash.length>20)db.crash.shift();u.cr=null;return{done:true,m:fm,x:c.x,win,bal:u.bal}}
  return{done:false,m}}
 // ---- live chat + rain ----
 const say=m=>{m.id=++db.chatId;m.ts=Date.now();db.chat.push(m);if(db.chat.length>150)db.chat.splice(0,db.chat.length-150);save()};
@@ -127,8 +128,8 @@ http.createServer(async(req,res)=>{const ip=ipOf(req),url=req.url.split('?')[0];
   if(req.method==='GET'&&url==='/api/leaderboard')return send(res,200,Object.values(db.users).sort((a,b)=>b.profit-a.profit).slice(0,10).map(u=>({user:mask(u.email),profit:u.profit,wag:u.wag})));
   if(req.method==='GET'&&url==='/api/me'){const u=authed(req);return send(res,200,u?pub(u):{guest:true})}
   if(req.method==='GET'&&url==='/api/txs'){const u=authed(req);if(!u)return send(res,401,{error:'Please log in'});return send(res,200,Object.values(db.txs).filter(t=>t.email==u.email).sort((a,b)=>b.ts-a.ts).slice(0,20).map(({id,type,amt,ign,status,ts})=>({id,type,amt,ign,status,ts})))}
-  if(req.method==='GET'&&url==='/api/live'){const u=authed(req);if(!u)return send(res,401,{error:'Please log in'});const since=+new URL(req.url,'http://x').searchParams.get('since')||0,r=db.rain;
-   return send(res,200,{msgs:db.chat.filter(m=>m.id>since).slice(-60),rain:{pot:r.pot,n:r.join.length,left:Math.max(0,r.ends-Date.now()),me:r.join.includes(u.email),len:RL},online:Object.values(db.users).filter(x=>Date.now()-(x.seen||0)<30000).length,bal:u.bal})}
+  if(req.method==='GET'&&url==='/api/live'){const u=authed(req);if(!u)return send(res,401,{error:'Please log in'});const sp=new URL(req.url,'http://x').searchParams,since=+sp.get('since')||0,fs=+sp.get('fs')||0,r=db.rain;
+   return send(res,200,{msgs:db.chat.filter(m=>m.id>since).slice(-60),rain:{pot:r.pot,n:r.join.length,left:Math.max(0,r.ends-Date.now()),me:r.join.includes(u.email),len:RL},feed:db.feed.filter(f=>f.id>fs).slice(-20),playing:Object.values(db.users).reduce((o,x)=>{if(x.lg&&Date.now()-(x.lgt||0)<120000)o[x.lg]=(o[x.lg]||0)+1;return o},{}),stat:db.stat,crash:db.crash.slice(-12),online:Object.values(db.users).filter(x=>Date.now()-(x.seen||0)<30000).length,bal:u.bal})}
   if(req.method!=='POST')return send(res,405,{error:'Method not allowed'});
   const b=await body(req);
   if(url==='/api/register'||url==='/api/login'){if(limited('a'+ip,10,6e4))return send(res,429,{error:'Too many attempts, slow down'});
@@ -165,7 +166,7 @@ http.createServer(async(req,res)=>{const ip=ipOf(req),url=req.url.split('?')[0];
    const g=GAMES[b.game],bet=b.bet;if(!g)return send(res,400,{error:'Unknown game'});
    if(!Number.isInteger(bet)||bet<MIN||bet>MAX)return send(res,400,{error:'Bet must be 100k to 2.5b'});if(bet>u.bal)return send(res,400,{error:'Not enough coins'});
    const F=Array.from({length:14},(_,i)=>fl(u,i));let r;try{r=g(i=>F[i],b.opts||{},bet)}catch(e){return send(res,400,{error:e.message})}
-   u.nonce++;const win=Math.floor(bet*r.m);u.bal+=win-bet;u.wag+=bet;u.profit+=win-bet;u.hist.unshift({g:b.game,bet,win,t:Date.now()});u.hist.length=Math.min(u.hist.length,50);save();
+   u.nonce++;const win=Math.floor(bet*r.m);rec(u,b.game,bet,win);u.bal+=win-bet;u.wag+=bet;u.profit+=win-bet;u.hist.unshift({g:b.game,bet,win,t:Date.now()});u.hist.length=Math.min(u.hist.length,50);save();
    return send(res,200,{floats:F,m:r.m,win,bal:u.bal})}
   send(res,404,{error:'Not found'})
  }catch(e){send(res,400,{error:e.message||'Bad request'})}
