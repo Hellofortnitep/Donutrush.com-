@@ -27,7 +27,7 @@ function jackpot(f,bet){const n=3+Math.floor(f(1)*3),P=[{name:'You',amt:bet}];fo
  const tot=P.reduce((a,p)=>a+p.amt,0);let x=f(0)*tot,w=0;for(;w<P.length-1&&x>=P[w].amt;w++)x-=P[w].amt;return{P,tot,w}}
 const GAMES={
  coinflip:(f,o)=>({m:(f(0)<.5?'heads':'tails')==(o.side=='tails'?'tails':'heads')?1.98:0}),
- crash:(f,o)=>{const t=Math.min(1000,Math.max(1.01,+o.target||2)),x=Math.max(1,Math.floor(99/(1-f(0)))/100);return{m:x>=t?t:0}},
+ crash:(f,o)=>{const t=Math.min(1000,Math.max(2,+o.target||2)),x=Math.max(1,Math.floor(99/(1-f(0)))/100);return{m:x>=t?t:0}},
  cases:(f,o)=>{const t=CT[o.tier];if(!t)throw Error('Unknown case');let a=f(0),i=0;while(i<t.length-1&&a>=t[i][0]){a-=t[i][0];i++}return{m:t[i][1]}},
  jackpot:(f,o,bet)=>{const j=jackpot(f,bet);return{m:j.w==0?j.tot*.95/bet:0}},
  roulette:(f,o,bet)=>{const n=Math.floor(f(0)*37),B=o.bets||{};let tot=0,ret=0;
@@ -37,7 +37,7 @@ const GAMES={
 const TB={low:[5.6,2.1,1.1,1,.5,1,1.1,2.1,5.6],med:[13,3,1.3,.7,.4,.7,1.3,3,13],high:[29,4,1.5,.3,.2,.3,1.5,4,29]},ST={towers:2/3,chicken:.85,lava:.75,stripmine:.8};
 const ci=(v,a,b,d)=>Math.min(b,Math.max(a,Math.floor(+v)||d)),Cn=(n,k)=>{let r=1;for(let i=0;i<k;i++)r=r*(n-i)/(i+1);return r};
 const kt=n=>{const t=Math.max(1,Math.ceil(n/2));let sw=0;for(let h=t;h<=n;h++)sw+=2**h;const o={};for(let h=t;h<=n;h++)o[h]=.99*(2**h/sw)/(Cn(n,h)*Cn(40-n,10-h)/Cn(40,10));return o};
-const lim=(f,o)=>{const t=Math.min(1000,Math.max(1.01,+o.target||2)),x=Math.max(1,Math.floor(99/(1-f(0)))/100);return{m:x>=t?t:0}};
+const lim=(f,o)=>{const t=Math.min(1000,Math.max(10,+o.target||10)),x=Math.max(1,Math.floor(99/(1-f(0)))/100);return{m:x>=t?t:0}};
 Object.assign(GAMES,{
  limbo:lim,
  dice:(f,o)=>{const t=ci(o.target,2,98,50),ov=o.mode!='under',n=Math.floor(f(0)*10000)/100,c=ov?100-t:t;return{m:(ov?n>t:n<t)?99/c:0}},
@@ -72,7 +72,7 @@ const bjView=(u,b,done,x)=>({p:b.p,d:done?b.d:[b.d[0]],pv:bvv(b.p),dv:done?bvv(b
 function bjEnd(u,b,m,msg){const win=Math.floor(b.bet*m);settle(u,'blackjack',b.bet,win);u.bj=null;return bjView(u,b,true,{m,win,msg})}
 function bjStand(u,b){while(bvv(b.d)<17)b.d.push(bjCard(u,b));const a=bvv(b.p),d=bvv(b.d);return bjEnd(u,b,d>21||a>d?2:a==d?1:0,d>21?'Dealer busts':a>d?'You win':a==d?'Push':'Dealer wins')}
 function crSettle(u,cash){const c=u.cr,m=Math.exp(.25*(Date.now()-c.t0)/1000),auto=c.auto>1?c.auto:Infinity,cp=Math.min(c.x,auto);
- if(m>=cp||cash){let win=0,fm=m;if(m>=cp){if(auto<=c.x){win=Math.floor(c.bet*auto);fm=auto}else fm=c.x}else win=Math.floor(c.bet*m);settle(u,'crash',c.bet,win);db.crash.push(c.x);if(db.crash.length>20)db.crash.shift();u.cr=null;return{done:true,m:fm,x:c.x,win,bal:u.bal}}
+ if(m>=cp||(cash&&m>=2)){let win=0,fm=m;if(m>=cp){if(auto<=c.x){win=Math.floor(c.bet*auto);fm=auto}else fm=c.x}else win=Math.floor(c.bet*m);settle(u,'crash',c.bet,win);db.crash.push(c.x);if(db.crash.length>20)db.crash.shift();u.cr=null;return{done:true,m:fm,x:c.x,win,bal:u.bal}}
  return{done:false,m}}
 // ---- live chat + rain ----
 const say=m=>{m.id=++db.chatId;m.ts=Date.now();db.chat.push(m);if(db.chat.length>150)db.chat.splice(0,db.chat.length-150);save()};
@@ -118,7 +118,7 @@ async function admin(req,res,url){const q=new URL(req.url,'http://x').searchPara
  if(url==='/admin/test-email'){if(q.get('token')!==ADMIN)return res.writeHead(403).end('Forbidden');const r=await mail('Test message from DonutRush','<p>If you can read this, deposit and withdrawal emails will reach you. ✅</p>',['(test)']);res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(page('<h2>Test email</h2><p>Sent to <b>'+esc(OWNER_EMAIL)+'</b>: <b>'+esc(r||'FAILED, see server console')+'</b></p><p>Check your inbox and spam folder.</p>'))}
  if(/^\/admin\/(reset|setbalance|ban|unban|kick|mute|unmute)$/.test(url)&&req.method==='POST'){const F=new URLSearchParams(await raw(req));if(!safeEq(F.get('token')||'',ADMIN))return res.writeHead(403).end('Forbidden');
   const u=db.users[String(F.get('email')||'').toLowerCase()];if(!u)return res.writeHead(404).end('No such player');const act=url.split('/')[2];
-  if(act=='reset')u.bal=0;else if(act=='setbalance'){const a=Math.floor(+F.get('amount'));if(!(a>=0&&a<=1e13))return res.writeHead(400).end('Bad amount');u.bal=a}
+  if(act=='reset')u.bal=0;else if(act=='setbalance'){const am=String(F.get('amount')||'').trim().toLowerCase().replace(/[, _]/g,''),mm=/^(\d+(?:\.\d+)?)([kmb]?)$/.exec(am),a=mm?Math.floor(+mm[1]*({k:1e3,m:1e6,b:1e9}[mm[2]]||1)):NaN;if(!(a>=0&&a<=1e13))return res.writeHead(400).end('Bad amount');u.bal=a}
   else if(act=='ban'){u.banned=true;u.sv=(u.sv||0)+1}else if(act=='unban')u.banned=false;else if(act=='kick')u.sv=(u.sv||0)+1;else if(act=='mute')u.muted=true;else u.muted=false;
   console.log('[ADMIN] '+act+' '+u.email);save();res.writeHead(303,{Location:'/admin?token='+encodeURIComponent(ADMIN)});return res.end()}
  if(url==='/admin'){if(!safeEq(q.get('token')||'',ADMIN))return res.writeHead(403).end('Forbidden');const P=Object.values(db.txs).filter(t=>t.status=='pending'),T=encodeURIComponent(ADMIN);
@@ -169,7 +169,7 @@ http.createServer(async(req,res)=>{const ip=ipOf(req),url=req.url.split('?')[0];
   if(url==='/api/bj/hit'||url==='/api/bj/stand'){const j=u.bj;if(!j)return send(res,400,{error:'No active hand'});
    if(url.endsWith('hit')){j.p.push(bjCard(u,j));if(bvv(j.p)>21)return send(res,200,bjEnd(u,j,0,'Bust'));save();if(bvv(j.p)<21)return send(res,200,bjView(u,j,false))}return send(res,200,bjStand(u,j))}
   if(url==='/api/crash/start'){if(u.cr){const r=crSettle(u,false);if(!r.done)return send(res,400,{error:'Finish your current crash round first'})}const bet=b.bet,e=betOk(u,bet);if(e)return send(res,400,{error:e});
-   u.bal-=bet;u.cr={bet,x:Math.max(1,Math.floor(99/(1-fl(u,200)))/100),t0:Date.now(),auto:+b.target>1?Math.min(1000,+b.target):0};save();return send(res,200,{ok:1,bal:u.bal})}
+   u.bal-=bet;u.cr={bet,x:Math.max(1,Math.floor(99/(1-fl(u,200)))/100),t0:Date.now(),auto:Math.min(1000,Math.max(2,+b.target||2))};save();return send(res,200,{ok:1,bal:u.bal})}
   if(url==='/api/crash/poll'){if(limited('cr'+u.email,900,6e4))return send(res,429,{error:'Slow down'});if(!u.cr)return send(res,400,{error:'No active round'});return send(res,200,crSettle(u,!!b.cash))}
   if(url==='/api/claim'){if(!process.env.FREE_COINS)return send(res,400,{error:'Free coins are disabled'});if(Date.now()-u.claimAt<CLAIM_MS)return send(res,400,{error:'Free coins not ready yet'});u.claimAt=Date.now();u.bal+=CLAIM;save();return send(res,200,pub(u))}
   if(url==='/api/seed/rotate'){if(u.bj||u.cr)return send(res,400,{error:'Finish your current round first'});const old=u.seed;u.seed=crypto.randomBytes(32).toString('hex');u.nonce=0;save();return send(res,200,{oldSeed:old,seedHash:sha(u.seed)})}
